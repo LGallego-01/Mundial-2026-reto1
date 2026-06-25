@@ -71,8 +71,15 @@ async function loadData() {
 }
 
 function getTeamName(team) {
-  if (!team) return "Por definir";
-  return team.shortName || team.name || "Por definir";
+  if (!team) return currentLanguage === "es" ? "Por definir" : "TBD";
+
+  const name = team.shortName || team.name || "Por definir";
+
+  if (currentLanguage === "es") {
+    return teamTranslations[name] || teamTranslations[team.name] || name;
+  }
+
+  return name;
 }
 
 function getMatchDate(match) {
