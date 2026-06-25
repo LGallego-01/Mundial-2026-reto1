@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mundial 2026 Live Radar</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="hero">
+    <div class="badge">Mundial FIFA 2026</div>
+    <h1>Live Radar 2026</h1>
+    <p>Partidos, grupos, clasificación y llaves con horario local automático.</p>
+    <div class="hero-actions">
+      <button onclick="showSection('partidos')">Ver partidos</button>
+      <button class="secondary" onclick="showSection('paises')">Buscar país</button>
+    </div>
+  </header>
+
+  <main>
+    <section class="status-card">
+      <div>
+        <span class="label">Próximo partido en tu horario local</span>
+        <h2 id="nextMatch">Cargando información...</h2>
+        <p id="smartNote">Sincronizando datos del torneo.</p>
+      </div>
+      <button onclick="loadData()">Actualizar</button>
+    </section>
+
+    <nav class="tabs">
+      <button onclick="showSection('partidos')">Partidos</button>
+      <button onclick="showSection('paises')">Países</button>
+      <button onclick="showSection('grupos')">Grupos</button>
+      <button onclick="showSection('llaves')">Llaves</button>
+      <button onclick="showSection('guia')">Guía fácil</button>
+    </nav>
+
+    <section id="partidos" class="panel active">
+      <h2>Calendario y resultados</h2>
+      <div class="filters">
+        <button onclick="renderMatches('all')">Todos</button>
+        <button onclick="renderMatches('next')">Próximos</button>
+        <button onclick="renderMatches('live')">En vivo</button>
+        <button onclick="renderMatches('finished')">Finalizados</button>
+      </div>
+      <div id="matchesGrid" class="grid"></div>
+    </section>
+
+    <section id="paises" class="panel">
+      <h2>Consulta por país</h2>
+      <p>Escribe un país. Si no participa, la app te lo dirá claramente.</p>
+      <div class="searchBox">
+        <input id="countryInput" placeholder="Ejemplo: Colombia, Argentina, España" />
+        <button onclick="searchCountry()">Buscar</button>
+      </div>
+      <div id="countryResult"></div>
+    </section>
+
+    <section id="grupos" class="panel">
+      <h2>Clasificación por grupos</h2>
+      <div id="groupsGrid" class="groups"></div>
+    </section>
+
+    <section id="llaves" class="panel">
+      <h2>Llaves de eliminación directa</h2>
+      <p class="muted">La ronda de 32 se proyecta cuando haya clasificados. Los equipos pendientes aparecen como “Por definir”.</p>
+      <div id="bracket" class="bracket"></div>
+    </section>
+
+    <section id="guia" class="panel">
+      <h2>Guía para quienes no saben de fútbol</h2>
+      <div class="guide">
+        <article><b>Victoria</b><span>El equipo suma 3 puntos.</span></article>
+        <article><b>Empate</b><span>Cada equipo suma 1 punto.</span></article>
+        <article><b>Derrota</b><span>No suma puntos.</span></article>
+        <article><b>Diferencia de gol</b><span>Goles a favor menos goles en contra.</span></article>
+        <article><b>Llaves</b><span>Si pierdes, quedas eliminado.</span></article>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    Datos sincronizados desde una API pública cuando esté disponible. Diseño responsive para celular.
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
