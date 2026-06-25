@@ -208,7 +208,7 @@ function searchCountry() {
 
   result.innerHTML = `
     <article class="card">
-      <h3>${team.name}</h3>
+      <h3>${getTeamName(team)}</h3>
       <p><b>Código:</b> ${team.tla}</p>
       <p><b>Grupo:</b> ${group || "Por definir"}</p>
       <p><b>Partidos encontrados:</b> ${teamMatches.length}</p>
@@ -252,7 +252,7 @@ function renderGroups() {
         ${group.table.map(row => `
           <tr>
             <td>${row.position}</td>
-            <td>${row.team.shortName}</td>
+            <td>${getTeamName(row.team)}</td>
             <td>${row.points}</td>
             <td>${row.goalDifference}</td>
           </tr>
@@ -307,11 +307,9 @@ function setText(id, text) {
 
 function changeLanguage() {
   currentLanguage = document.getElementById("languageSelect").value;
-
   renderNextMatch();
   renderMatches("all");
   renderGroups();
   renderBracket();
 }
-
 loadData();
