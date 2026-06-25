@@ -3,7 +3,41 @@ const API = "https://mundial2026reto1.quinterolila03.workers.dev";
 let games = [];
 let teams = [];
 let standings = [];
+let currentLanguage = "es";
 
+const teamTranslations = {
+  "Germany": "Alemania",
+  "Ecuador": "Ecuador",
+  "Mexico": "México",
+  "South Africa": "Sudáfrica",
+  "South Korea": "Corea del Sur",
+  "Czechia": "Chequia",
+  "United States": "Estados Unidos",
+  "Brazil": "Brasil",
+  "Spain": "España",
+  "England": "Inglaterra",
+  "Netherlands": "Países Bajos",
+  "Switzerland": "Suiza",
+  "Ivory Coast": "Costa de Marfil",
+  "Saudi Arabia": "Arabia Saudita",
+  "Cape Verde": "Cabo Verde",
+  "Bosnia-H.": "Bosnia-Herzegovina",
+  "Morocco": "Marruecos",
+  "France": "Francia",
+  "Belgium": "Bélgica",
+  "Egypt": "Egipto",
+  "Japan": "Japón",
+  "Sweden": "Suecia",
+  "Tunisia": "Túnez",
+  "Norway": "Noruega",
+  "Portugal": "Portugal",
+  "Colombia": "Colombia",
+  "Argentina": "Argentina",
+  "Uruguay": "Uruguay",
+  "Canada": "Canadá",
+  "Australia": "Australia",
+  "Turkey": "Turquía"
+};
 async function fetchJson(path) {
   const response = await fetch(`${API}${path}`);
   if (!response.ok) throw new Error("No se pudo consultar " + path);
