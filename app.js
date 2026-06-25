@@ -305,4 +305,13 @@ function setText(id, text) {
   if (element) element.textContent = text;
 }
 
+function changeLanguage() {
+  currentLanguage = document.getElementById("languageSelect").value;
+
+  renderNextMatch();
+  renderMatches("all");
+  renderGroups();
+  renderBracket();
+}
+
 loadData();
