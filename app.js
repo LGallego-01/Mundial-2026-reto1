@@ -22,7 +22,9 @@ const teamTranslations = {
   "Ivory Coast": "Costa de Marfil",
   "Saudi Arabia": "Arabia Saudita",
   "Cape Verde": "Cabo Verde",
+  "Cape Verde Islands": "Cabo Verde",
   "Bosnia-H.": "Bosnia-Herzegovina",
+  "Bosnia-Herzegovina": "Bosnia-Herzegovina",
   "Morocco": "Marruecos",
   "France": "Francia",
   "Belgium": "Bélgica",
@@ -37,8 +39,74 @@ const teamTranslations = {
   "Uruguay": "Uruguay",
   "Canada": "Canadá",
   "Australia": "Australia",
-  "Turkey": "Turquía"
+  "Turkey": "Turquía",
+  "Curaçao": "Curazao",
+  "Qatar": "Catar",
+  "Paraguay": "Paraguay",
+  "Haiti": "Haití",
+  "Iran": "Irán",
+  "New Zealand": "Nueva Zelanda",
+  "Iraq": "Irak",
+  "Jordan": "Jordania",
+  "Austria": "Austria",
+  "Algeria": "Argelia",
+  "Senegal": "Senegal",
+  "Ghana": "Ghana",
+  "Panama": "Panamá",
+  "Croatia": "Croacia",
+  "DR Congo": "RD Congo",
+  "Uzbekistan": "Uzbekistán",
+
+  "GER": "Alemania",
+  "ECU": "Ecuador",
+  "SCO": "Escocia",
+  "MEX": "México",
+  "RSA": "Sudáfrica",
+  "KOR": "Corea del Sur",
+  "CZE": "República Checa",
+  "USA": "Estados Unidos",
+  "BRA": "Brasil",
+  "ESP": "España",
+  "ENG": "Inglaterra",
+  "NED": "Países Bajos",
+  "SUI": "Suiza",
+  "CIV": "Costa de Marfil",
+  "KSA": "Arabia Saudita",
+  "CPV": "Cabo Verde",
+  "BIH": "Bosnia-Herzegovina",
+  "MAR": "Marruecos",
+  "FRA": "Francia",
+  "BEL": "Bélgica",
+  "EGY": "Egipto",
+  "JPN": "Japón",
+  "SWE": "Suecia",
+  "TUN": "Túnez",
+  "NOR": "Noruega",
+  "POR": "Portugal",
+  "COL": "Colombia",
+  "ARG": "Argentina",
+  "URU": "Uruguay",
+  "CAN": "Canadá",
+  "AUS": "Australia",
+  "TUR": "Turquía",
+  "CUW": "Curazao",
+  "QAT": "Catar",
+  "PAR": "Paraguay",
+  "HAI": "Haití",
+  "IRN": "Irán",
+  "NZL": "Nueva Zelanda",
+  "IRQ": "Irak",
+  "JOR": "Jordania",
+  "AUT": "Austria",
+  "ALG": "Argelia",
+  "SEN": "Senegal",
+  "GHA": "Ghana",
+  "PAN": "Panamá",
+  "CRO": "Croacia",
+  "COD": "RD Congo",
+  "UZB": "Uzbekistán"
 };
+
 async function fetchJson(path) {
   const response = await fetch(`${API}${path}`);
   if (!response.ok) throw new Error("No se pudo consultar " + path);
@@ -74,17 +142,22 @@ async function loadData() {
 function getTeamName(team) {
   if (!team) return currentLanguage === "es" ? "Por definir" : "TBD";
 
-  const name = team.shortName || team.name || "Por definir";
+  const shortName = team.shortName || "";
+  const fullName = team.name || "";
+  const tla = team.tla || "";
 
   if (currentLanguage === "es") {
-    return teamTranslations[name] || teamTranslations[team.name] || name;
+    return (
+      teamTranslations[shortName] ||
+      teamTranslations[fullName] ||
+      teamTranslations[tla] ||
+      shortName ||
+      fullName ||
+      "Por definir"
+    );
   }
 
-  return name;
-}
-
-function getMatchDate(match) {
-  return match.utcDate;
+  return shortName || fullName || "TBD";
 }
 
 function localTime(dateValue) {
@@ -149,22 +222,22 @@ function renderMatches(filter = "all") {
 }
 
 function statusLabel(status) {
-  if (status === "live") return "EN VIVO";
-  if (status === "finished") return "FINALIZADO";
-  return "PRÓXIMO";
+  if (status === "live") return currentLanguage === "es" ? "EN VIVO" : "LIVE";
+  if (status === "finished") return currentLanguage === "es" ? "FINALIZADO" : "FINISHED";
+  return currentLanguage === "es" ? "PRÓXIMO" : "NEXT";
 }
 
 function smartMatchNote(match) {
   const status = statusOf(match);
 
-  if (status === "live") {
-    return "Este resultado puede cambiar la clasificación del grupo.";
+  if (currentLanguage === "en") {
+    if (status === "live") return "This result may change the group standings.";
+    if (status === "finished") return "Result available for standings and tiebreakers.";
+    return "Upcoming match automatically converted to your local time.";
   }
 
-  if (status === "finished") {
-    return "Resultado disponible para clasificación y desempates.";
-  }
-
+  if (status === "live") return "Este resultado puede cambiar la clasificación del grupo.";
+  if (status === "finished") return "Resultado disponible para clasificación y desempates.";
   return "Próximo partido convertido automáticamente al horario local.";
 }
 
@@ -187,15 +260,19 @@ function searchCountry() {
     return (
       normalizeText(t.name).includes(search) ||
       normalizeText(t.shortName).includes(search) ||
-      normalizeText(t.tla).includes(search)
+      normalizeText(t.tla).includes(search) ||
+      normalizeText(getTeamName(t)).includes(search)
     );
   });
 
   if (!team) {
     result.innerHTML = `
       <article class="card">
-        <h3>País no participante</h3>
-        <p>“${input}” no aparece entre los 48 equipos registrados para el Mundial 2026.</p>
+        <h3>${currentLanguage === "es" ? "País no participante" : "Country not participating"}</h3>
+        <p>${currentLanguage === "es"
+          ? `“${input}” no aparece entre los 48 equipos registrados para el Mundial 2026.`
+          : `“${input}” is not listed among the 48 registered teams for the 2026 World Cup.`
+        }</p>
       </article>
     `;
     return;
@@ -210,9 +287,9 @@ function searchCountry() {
   result.innerHTML = `
     <article class="card">
       <h3>${getTeamName(team)}</h3>
-      <p><b>Código:</b> ${team.tla}</p>
-      <p><b>Grupo:</b> ${group || "Por definir"}</p>
-      <p><b>Partidos encontrados:</b> ${teamMatches.length}</p>
+      <p><b>${currentLanguage === "es" ? "Código" : "Code"}:</b> ${team.tla}</p>
+      <p><b>${currentLanguage === "es" ? "Grupo" : "Group"}:</b> ${group || "Por definir"}</p>
+      <p><b>${currentLanguage === "es" ? "Partidos encontrados" : "Matches found"}:</b> ${teamMatches.length}</p>
     </article>
     ${teamMatches.map(match => `
       <article class="card">
@@ -246,9 +323,9 @@ function renderGroups() {
       <table>
         <tr>
           <th>#</th>
-          <th>Equipo</th>
+          <th>${currentLanguage === "es" ? "Equipo" : "Team"}</th>
           <th>Pts</th>
-          <th>DG</th>
+          <th>${currentLanguage === "es" ? "DG" : "GD"}</th>
         </tr>
         ${group.table.map(row => `
           <tr>
@@ -270,8 +347,11 @@ function renderBracket() {
   if (!knockoutMatches.length) {
     container.innerHTML = `
       <div class="round">
-        <h3>Llaves</h3>
-        <p>Las llaves se mostrarán cuando estén disponibles los clasificados.</p>
+        <h3>${currentLanguage === "es" ? "Llaves" : "Bracket"}</h3>
+        <p>${currentLanguage === "es"
+          ? "Las llaves se mostrarán cuando estén disponibles los clasificados."
+          : "The bracket will be shown when qualified teams are available."
+        }</p>
       </div>
     `;
     return;
@@ -313,4 +393,5 @@ function changeLanguage() {
   renderGroups();
   renderBracket();
 }
+
 loadData();
