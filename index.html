@@ -3,91 +3,176 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Mundial 2026 Live Radar</title>
-  <link rel="stylesheet" href="style.css" />
+  <title>Mundial 2026 Live Center</title>
+
+  <link rel="stylesheet" href="assets/css/style.css" />
+  <link rel="manifest" href="manifest.json" />
 </head>
+
 <body>
-  <header class="hero">
-    <div class="badge">Mundial FIFA 2026</div>
-    <h1>Live Radar 2026</h1>
-    <p>Partidos, grupos, clasificación y llaves con horario local automático.</p>
-    <div class="hero-actions">
-      <button onclick="showSection('partidos')">Ver partidos</button>
-      <button class="secondary" onclick="showSection('paises')">Buscar país</button>
-      
-      <select id="languageSelect" onchange="changeLanguage()">
-        <option value="es">Español</option>
-        <option value="en">English</option>
-      </select>
-    </div>
-  </header>
+  <div class="app-shell">
 
-  <main>
-    <section class="status-card">
-      <div>
-        <span class="label">Próximo partido en tu horario local</span>
-        <h2 id="nextMatch">Cargando información...</h2>
-        <p id="smartNote">Sincronizando datos del torneo.</p>
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-icon">🏆</div>
+        <div>
+          <strong>Mundial 2026</strong>
+          <span>Live Center</span>
+        </div>
       </div>
-      <button onclick="loadData()">Actualizar</button>
-    </section>
 
-    <nav class="tabs">
-      <button onclick="showSection('partidos')">Partidos</button>
-      <button onclick="showSection('paises')">Países</button>
-      <button onclick="showSection('grupos')">Grupos</button>
-      <button onclick="showSection('llaves')">Llaves</button>
-      <button onclick="showSection('guia')">Guía fácil</button>
-    </nav>
+      <nav class="menu">
+        <button onclick="showSection('inicio')" class="active">Inicio</button>
+        <button onclick="showSection('partidos')">Partidos</button>
+        <button onclick="showSection('paises')">Países</button>
+        <button onclick="showSection('grupos')">Grupos</button>
+        <button onclick="showSection('llaves')">Llaves</button>
+        <button onclick="showSection('estadisticas')">Estadísticas</button>
+        <button onclick="showSection('asistente')">Guía fácil</button>
+      </nav>
+    </aside>
 
-    <section id="partidos" class="panel active">
-      <h2>Calendario y resultados</h2>
-      <div class="filters">
-        <button onclick="renderMatches('all')">Todos</button>
-        <button onclick="renderMatches('next')">Próximos</button>
-        <button onclick="renderMatches('live')">En vivo</button>
-        <button onclick="renderMatches('finished')">Finalizados</button>
-      </div>
-      <div id="matchesGrid" class="grid"></div>
-    </section>
+    <main class="main-content">
 
-    <section id="paises" class="panel">
-      <h2>Consulta por país</h2>
-      <p>Escribe un país. Si no participa, la app te lo dirá claramente.</p>
-      <div class="searchBox">
-        <input id="countryInput" placeholder="Ejemplo: Colombia, Argentina, España" />
-        <button onclick="searchCountry()">Buscar</button>
-      </div>
-      <div id="countryResult"></div>
-    </section>
+      <header class="topbar">
+        <div>
+          <span class="eyebrow">FIFA World Cup 2026</span>
+          <h1>Centro de seguimiento mundialista</h1>
+        </div>
 
-    <section id="grupos" class="panel">
-      <h2>Clasificación por grupos</h2>
-      <div id="groupsGrid" class="groups"></div>
-    </section>
+        <div class="top-actions">
+          <select id="languageSelect" onchange="changeLanguage()">
+            <option value="es">Español</option>
+            <option value="en">English</option>
+          </select>
 
-    <section id="llaves" class="panel">
-      <h2>Llaves de eliminación directa</h2>
-      <p class="muted">La ronda de 32 se proyecta cuando haya clasificados. Los equipos pendientes aparecen como “Por definir”.</p>
-      <div id="bracket" class="bracket"></div>
-    </section>
+          <button onclick="toggleTheme()">🌙</button>
+          <button onclick="loadData()">Actualizar</button>
+        </div>
+      </header>
 
-    <section id="guia" class="panel">
-      <h2>Guía para quienes no saben de fútbol</h2>
-      <div class="guide">
-        <article><b>Victoria</b><span>El equipo suma 3 puntos.</span></article>
-        <article><b>Empate</b><span>Cada equipo suma 1 punto.</span></article>
-        <article><b>Derrota</b><span>No suma puntos.</span></article>
-        <article><b>Diferencia de gol</b><span>Goles a favor menos goles en contra.</span></article>
-        <article><b>Llaves</b><span>Si pierdes, quedas eliminado.</span></article>
-      </div>
-    </section>
-  </main>
+      <section id="inicio" class="panel active">
+        <div class="hero-card">
+          <div>
+            <span class="label">Próximo partido</span>
+            <h2 id="nextMatch">Cargando información...</h2>
+            <p id="smartNote">Sincronizando datos del torneo.</p>
+          </div>
+          <div class="countdown" id="countdown">--:--:--</div>
+        </div>
 
-  <footer>
-    Datos sincronizados desde una API pública cuando esté disponible. Diseño responsive para celular.
-  </footer>
+        <div class="kpi-grid">
+          <article>
+            <span>Partidos</span>
+            <strong id="totalMatches">0</strong>
+          </article>
+          <article>
+            <span>Finalizados</span>
+            <strong id="finishedMatches">0</strong>
+          </article>
+          <article>
+            <span>En vivo</span>
+            <strong id="liveMatches">0</strong>
+          </article>
+          <article>
+            <span>Equipos</span>
+            <strong id="totalTeams">0</strong>
+          </article>
+        </div>
 
-  <script src="app.js"></script>
+        <section class="panel-card">
+          <h2>Partidos destacados</h2>
+          <div id="featuredMatches" class="match-list"></div>
+        </section>
+      </section>
+
+      <section id="partidos" class="panel">
+        <div class="section-title">
+          <h2>Calendario y resultados</h2>
+          <p>Consulta partidos próximos, en vivo y finalizados.</p>
+        </div>
+
+        <div class="filters">
+          <button onclick="renderMatches('all')">Todos</button>
+          <button onclick="renderMatches('next')">Próximos</button>
+          <button onclick="renderMatches('live')">En vivo</button>
+          <button onclick="renderMatches('finished')">Finalizados</button>
+        </div>
+
+        <div id="matchesGrid" class="grid"></div>
+      </section>
+
+      <section id="paises" class="panel">
+        <div class="section-title">
+          <h2>Consulta por país</h2>
+          <p>Busca una selección participante del Mundial 2026.</p>
+        </div>
+
+        <div class="searchBox">
+          <input id="countryInput" placeholder="Ejemplo: Colombia, Argentina, España" />
+          <button onclick="searchCountry()">Buscar</button>
+        </div>
+
+        <div id="countryResult" class="result-area"></div>
+      </section>
+
+      <section id="grupos" class="panel">
+        <div class="section-title">
+          <h2>Clasificación por grupos</h2>
+          <p>Tabla actualizada con puntos y diferencia de gol.</p>
+        </div>
+        <div id="groupsGrid" class="groups"></div>
+      </section>
+
+      <section id="llaves" class="panel">
+        <div class="section-title">
+          <h2>Llaves de eliminación directa</h2>
+          <p>Se mostrarán cuando existan clasificados confirmados.</p>
+        </div>
+        <div id="bracket" class="bracket"></div>
+      </section>
+
+      <section id="estadisticas" class="panel">
+        <div class="section-title">
+          <h2>Estadísticas del torneo</h2>
+          <p>Resumen visual de partidos, goles y estados del torneo.</p>
+        </div>
+        <div id="statsPanel" class="stats-grid"></div>
+      </section>
+
+      <section id="asistente" class="panel">
+        <div class="section-title">
+          <h2>Guía fácil del Mundial</h2>
+          <p>Explicaciones simples para usuarios que no conocen mucho de fútbol.</p>
+        </div>
+
+        <div class="guide-grid">
+          <article>
+            <strong>Victoria</strong>
+            <span>El equipo suma 3 puntos.</span>
+          </article>
+          <article>
+            <strong>Empate</strong>
+            <span>Cada equipo suma 1 punto.</span>
+          </article>
+          <article>
+            <strong>Derrota</strong>
+            <span>No suma puntos.</span>
+          </article>
+          <article>
+            <strong>Diferencia de gol</strong>
+            <span>Goles a favor menos goles en contra.</span>
+          </article>
+          <article>
+            <strong>Llaves</strong>
+            <span>Desde eliminación directa, si pierdes quedas fuera.</span>
+          </article>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <script src="assets/js/app.js"></script>
 </body>
 </html>
