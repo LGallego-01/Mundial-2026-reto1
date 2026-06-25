@@ -1,160 +1,267 @@
-const API = "https://worldcup26.ir";
+const API = "https://mundial2026reto1.quinterolila03.workers.dev";
+
 let games = [];
 let teams = [];
-let groups = [];
-
-const aliases = {
-  "estados unidos": "usa", "eeuu": "usa", "usa": "usa",
-  "inglaterra": "england", "españa": "spain", "alemania": "germany",
-  "brasil": "brazil", "corea del sur": "south korea", "costa rica": "costa rica"
-};
+let standings = [];
 
 async function fetchJson(path) {
   const response = await fetch(`${API}${path}`);
-  if (!response.ok) throw new Error("API no disponible");
+  if (!response.ok) throw new Error("No se pudo consultar " + path);
   return await response.json();
 }
 
 async function loadData() {
-  setText("smartNote", "Actualizando resultados y clasificación...");
+  setText("smartNote", "Actualizando datos desde Football Data...");
+
   try {
-    const [g, t, gr] = await Promise.all([
-      fetchJson("/get/games"),
-      fetchJson("/get/teams"),
-      fetchJson("/get/groups")
+    const [matchesData, teamsData, standingsData] = await Promise.all([
+      fetchJson("/matches"),
+      fetchJson("/teams"),
+      fetchJson("/standings")
     ]);
-    games = normalizeArray(g);
-    teams = normalizeArray(t);
-    groups = normalizeArray(gr);
-    setText("smartNote", "Datos cargados. Horarios convertidos automáticamente al horario del dispositivo.");
-  } catch (e) {
-    games = demoGames();
-    teams = demoTeams();
-    groups = demoGroups();
-    setText("smartNote", "Modo demostración: cuando la API esté disponible, la página se sincronizará automáticamente.");
+
+    games = matchesData.matches || [];
+    teams = teamsData.teams || [];
+    standings = standingsData.standings || [];
+
+    setText("smartNote", "Datos actualizados correctamente. Horarios convertidos al horario local del visitante.");
+  } catch (error) {
+    console.error(error);
+    setText("smartNote", "No se pudieron cargar los datos. Intenta actualizar la página.");
   }
+
   renderNextMatch();
   renderMatches("all");
   renderGroups();
   renderBracket();
 }
 
-function normalizeArray(data) {
-  if (Array.isArray(data)) return data;
-  if (data?.data && Array.isArray(data.data)) return data.data;
-  if (data?.games) return data.games;
-  if (data?.teams) return data.teams;
-  if (data?.groups) return data.groups;
-  return [];
-}
-
-function getTeamName(value) {
-  if (!value) return "Por definir";
-  if (typeof value === "string") return value;
-  return value.name || value.country || value.team || value.en || "Por definir";
+function getTeamName(team) {
+  if (!team) return "Por definir";
+  return team.shortName || team.name || "Por definir";
 }
 
 function getMatchDate(match) {
-  return match.date || match.datetime || match.time || match.start_time || match.kickoff;
+  return match.utcDate;
 }
 
 function localTime(dateValue) {
   if (!dateValue) return "Horario por definir";
-  const d = new Date(dateValue);
-  if (isNaN(d)) return dateValue;
-  return d.toLocaleString([], { dateStyle: "medium", timeStyle: "short" });
+
+  const date = new Date(dateValue);
+
+  return date.toLocaleString([], {
+    dateStyle: "medium",
+    timeStyle: "short"
+  });
 }
 
 function statusOf(match) {
-  const raw = String(match.status || match.state || "").toLowerCase();
-  if (raw.includes("live") || raw.includes("playing")) return "live";
-  if (raw.includes("finish") || raw.includes("final")) return "finished";
-  const d = new Date(getMatchDate(match));
-  if (!isNaN(d) && d < new Date()) return "finished";
+  if (match.status === "IN_PLAY" || match.status === "PAUSED") return "live";
+  if (match.status === "FINISHED") return "finished";
   return "next";
 }
 
 function renderNextMatch() {
   const upcoming = games
-    .filter(m => statusOf(m) === "next")
-    .sort((a,b) => new Date(getMatchDate(a)) - new Date(getMatchDate(b)))[0];
-  if (!upcoming) return setText("nextMatch", "No hay próximos partidos disponibles");
-  const a = getTeamName(upcoming.home_team || upcoming.home || upcoming.team1);
-  const b = getTeamName(upcoming.away_team || upcoming.away || upcoming.team2);
-  setText("nextMatch", `${a} vs ${b} · ${localTime(getMatchDate(upcoming))}`);
+    .filter(match => statusOf(match) === "next")
+    .sort((a, b) => new Date(a.utcDate) - new Date(b.utcDate))[0];
+
+  if (!upcoming) {
+    setText("nextMatch", "No hay próximos partidos disponibles.");
+    return;
+  }
+
+  const home = getTeamName(upcoming.homeTeam);
+  const away = getTeamName(upcoming.awayTeam);
+
+  setText("nextMatch", `${home} vs ${away} · ${localTime(upcoming.utcDate)}`);
 }
 
 function renderMatches(filter = "all") {
   const container = document.getElementById("matchesGrid");
-  const list = games.filter(m => filter === "all" || statusOf(m) === filter);
-  container.innerHTML = list.map(m => {
-    const home = getTeamName(m.home_team || m.home || m.team1);
-    const away = getTeamName(m.away_team || m.away || m.team2);
-    const hs = m.home_score ?? m.score_home ?? m.home_goals ?? "-";
-    const as = m.away_score ?? m.score_away ?? m.away_goals ?? "-";
-    const st = statusOf(m);
-    return `<article class="card">
-      <span class="pill">${st === "live" ? "EN VIVO" : st === "finished" ? "FINALIZADO" : "PRÓXIMO"}</span>
-      <h3>${home} vs ${away}</h3>
-      <div class="score">${hs} - ${as}</div>
-      <p>${localTime(getMatchDate(m))}</p>
-      <p class="muted">${smartMatchNote(m)}</p>
-    </article>`;
+
+  const list = games.filter(match => {
+    return filter === "all" || statusOf(match) === filter;
+  });
+
+  container.innerHTML = list.map(match => {
+    const home = getTeamName(match.homeTeam);
+    const away = getTeamName(match.awayTeam);
+
+    const homeScore = match.score?.fullTime?.home ?? "-";
+    const awayScore = match.score?.fullTime?.away ?? "-";
+
+    const status = statusOf(match);
+
+    return `
+      <article class="card">
+        <span class="pill">${statusLabel(status)}</span>
+        <h3>${home} vs ${away}</h3>
+        <div class="score">${homeScore} - ${awayScore}</div>
+        <p>${localTime(match.utcDate)}</p>
+        <p class="muted">${smartMatchNote(match)}</p>
+      </article>
+    `;
   }).join("") || `<p class="muted">No hay partidos para este filtro.</p>`;
 }
 
-function smartMatchNote(m) {
-  const st = statusOf(m);
-  if (st === "live") return "Este resultado puede cambiar la clasificación del grupo.";
-  if (st === "finished") return "Resultado disponible para clasificación y desempates.";
-  return "Próximo partido convertido al horario local de quien abre la página.";
+function statusLabel(status) {
+  if (status === "live") return "EN VIVO";
+  if (status === "finished") return "FINALIZADO";
+  return "PRÓXIMO";
+}
+
+function smartMatchNote(match) {
+  const status = statusOf(match);
+
+  if (status === "live") {
+    return "Este resultado puede cambiar la clasificación del grupo.";
+  }
+
+  if (status === "finished") {
+    return "Resultado disponible para clasificación y desempates.";
+  }
+
+  return "Próximo partido convertido automáticamente al horario local.";
+}
+
+function normalizeText(text) {
+  return String(text || "")
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "");
 }
 
 function searchCountry() {
-  const input = document.getElementById("countryInput").value.trim().toLowerCase();
-  const normalized = aliases[input] || input;
-  const team = teams.find(t => getTeamName(t).toLowerCase() === normalized || getTeamName(t).toLowerCase().includes(normalized));
+  const input = document.getElementById("countryInput").value.trim();
   const result = document.getElementById("countryResult");
+
   if (!input) return;
+
+  const search = normalizeText(input);
+
+  const team = teams.find(t => {
+    return (
+      normalizeText(t.name).includes(search) ||
+      normalizeText(t.shortName).includes(search) ||
+      normalizeText(t.tla).includes(search)
+    );
+  });
+
   if (!team) {
-    result.innerHTML = `<article class="card"><h3>País no participante</h3><p>“${input}” no aparece como selección clasificada o registrada en la API del Mundial 2026.</p></article>`;
+    result.innerHTML = `
+      <article class="card">
+        <h3>País no participante</h3>
+        <p>“${input}” no aparece entre los 48 equipos registrados para el Mundial 2026.</p>
+      </article>
+    `;
     return;
   }
-  const name = getTeamName(team);
-  const teamGames = games.filter(m => JSON.stringify(m).toLowerCase().includes(name.toLowerCase()));
-  result.innerHTML = `<article class="card"><h3>${name}</h3><p><b>Grupo:</b> ${team.group || team.group_name || "Por definir"}</p><p>${teamGames.length} partido(s) encontrados.</p></article>` +
-    teamGames.map(m => `<article class="card"><b>${getTeamName(m.home_team || m.home || m.team1)} vs ${getTeamName(m.away_team || m.away || m.team2)}</b><p>${localTime(getMatchDate(m))}</p><p class="muted">${smartMatchNote(m)}</p></article>`).join("");
+
+  const teamMatches = games.filter(match => {
+    return match.homeTeam?.id === team.id || match.awayTeam?.id === team.id;
+  });
+
+  const group = findTeamGroup(team.id);
+
+  result.innerHTML = `
+    <article class="card">
+      <h3>${team.name}</h3>
+      <p><b>Código:</b> ${team.tla}</p>
+      <p><b>Grupo:</b> ${group || "Por definir"}</p>
+      <p><b>Partidos encontrados:</b> ${teamMatches.length}</p>
+    </article>
+    ${teamMatches.map(match => `
+      <article class="card">
+        <b>${getTeamName(match.homeTeam)} vs ${getTeamName(match.awayTeam)}</b>
+        <p>${localTime(match.utcDate)}</p>
+        <p class="muted">${smartMatchNote(match)}</p>
+      </article>
+    `).join("")}
+  `;
+}
+
+function findTeamGroup(teamId) {
+  for (const group of standings) {
+    const found = group.table?.find(row => row.team.id === teamId);
+    if (found) return group.group;
+  }
+  return null;
 }
 
 function renderGroups() {
   const container = document.getElementById("groupsGrid");
-  if (groups.length) {
-    container.innerHTML = groups.map((g, i) => `<article class="card"><h3>Grupo ${g.name || g.group || String.fromCharCode(65+i)}</h3>${groupTable(g)}</article>`).join("");
-  } else {
-    container.innerHTML = `<p class="muted">Clasificación pendiente de sincronización.</p>`;
-  }
-}
 
-function groupTable(group) {
-  const rows = group.teams || group.standings || [];
-  if (!rows.length) return `<p class="muted">Sin posiciones disponibles todavía.</p>`;
-  return `<table><tr><th>Equipo</th><th>Pts</th><th>DG</th></tr>${rows.map(t => `<tr><td>${getTeamName(t)}</td><td>${t.points ?? t.pts ?? 0}</td><td>${t.goal_difference ?? t.gd ?? 0}</td></tr>`).join("")}</table>`;
+  if (!standings.length) {
+    container.innerHTML = `<p class="muted">Clasificación pendiente de sincronización.</p>`;
+    return;
+  }
+
+  container.innerHTML = standings.map(group => `
+    <article class="card">
+      <h3>${group.group}</h3>
+      <table>
+        <tr>
+          <th>#</th>
+          <th>Equipo</th>
+          <th>Pts</th>
+          <th>DG</th>
+        </tr>
+        ${group.table.map(row => `
+          <tr>
+            <td>${row.position}</td>
+            <td>${row.team.shortName}</td>
+            <td>${row.points}</td>
+            <td>${row.goalDifference}</td>
+          </tr>
+        `).join("")}
+      </table>
+    </article>
+  `).join("");
 }
 
 function renderBracket() {
-  const rounds = ["Ronda de 32", "Octavos", "Cuartos", "Semifinal", "Final"];
-  document.getElementById("bracket").innerHTML = rounds.map(r => `<div class="round"><h3>${r}</h3><p>Por definir vs Por definir</p><p class="muted">Se actualiza con clasificados disponibles.</p></div>`).join("");
+  const knockoutMatches = games.filter(match => match.stage !== "GROUP_STAGE");
+  const container = document.getElementById("bracket");
+
+  if (!knockoutMatches.length) {
+    container.innerHTML = `
+      <div class="round">
+        <h3>Llaves</h3>
+        <p>Las llaves se mostrarán cuando estén disponibles los clasificados.</p>
+      </div>
+    `;
+    return;
+  }
+
+  container.innerHTML = knockoutMatches.map(match => `
+    <div class="round">
+      <h3>${formatStage(match.stage)}</h3>
+      <p>${getTeamName(match.homeTeam)} vs ${getTeamName(match.awayTeam)}</p>
+      <p class="muted">${localTime(match.utcDate)}</p>
+    </div>
+  `).join("");
+}
+
+function formatStage(stage) {
+  return String(stage || "")
+    .replaceAll("_", " ")
+    .toLowerCase()
+    .replace(/\b\w/g, letter => letter.toUpperCase());
 }
 
 function showSection(id) {
-  document.querySelectorAll(".panel").forEach(p => p.classList.remove("active"));
+  document.querySelectorAll(".panel").forEach(panel => {
+    panel.classList.remove("active");
+  });
+
   document.getElementById(id).classList.add("active");
 }
 
-function setText(id, text) { document.getElementById(id).textContent = text; }
-
-function demoTeams() { return [{name:"Colombia", group:"Por definir"},{name:"Argentina", group:"Por definir"},{name:"Spain", group:"Por definir"},{name:"Brazil", group:"Por definir"},{name:"USA", group:"Por definir"}]; }
-function demoGroups() { return [{name:"A", teams:[{name:"Por definir", points:0, gd:0},{name:"Por definir", points:0, gd:0}]}]; }
-function demoGames() { return [{home_team:"México", away_team:"Por definir", date:"2026-06-11T20:00:00Z", status:"scheduled"},{home_team:"Canadá", away_team:"Por definir", date:"2026-06-12T00:00:00Z", status:"scheduled"}]; }
+function setText(id, text) {
+  const element = document.getElementById(id);
+  if (element) element.textContent = text;
+}
 
 loadData();
