@@ -8,10 +8,11 @@ let currentLanguage = "es";
 const teamTranslations = {
   "Germany": "Alemania",
   "Ecuador": "Ecuador",
+  "Scotland": "Escocia",
   "Mexico": "México",
   "South Africa": "Sudáfrica",
   "South Korea": "Corea del Sur",
-  "Czechia": "Chequia",
+  "Czechia": "República Checa",
   "United States": "Estados Unidos",
   "Brazil": "Brasil",
   "Spain": "España",
