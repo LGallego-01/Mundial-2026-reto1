@@ -42,6 +42,9 @@ function formatStage(stage) {
   const value = String(stage || "").toUpperCase();
 
   const labels = {
+
+    GROUP_STAGE: getLanguage() === "es" ? "Fase de grupos" : "Group Stage",
+     
     LAST_32: getLanguage() === "es" ? "Ronda de 32" : "Round of 32",
     ROUND_OF_32: getLanguage() === "es" ? "Ronda de 32" : "Round of 32",
 
