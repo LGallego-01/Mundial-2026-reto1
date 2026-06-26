@@ -51,13 +51,31 @@
 
       <section id="inicio" class="panel active">
         <div class="hero-card">
-          <div>
-            <span class="label" id="labelNext">Próximo partido</span>
-            <h2 id="nextMatch">Cargando información...</h2>
-            <p id="smartNote">Sincronizando datos del torneo.</p>
-          </div>
-          <div class="countdown" id="countdown">--:--:--</div>
+            <div class="hero-header">
+                <div>
+                    <span class="hero-badge" id="heroBadge">
+                    🔥 Hoy en el Mundial
+                    </span>
+                    <h2 id="nextMatch">
+                        Cargando partidos...
+                    </h2>
+                    <p id="smartNote">
+                        Sincronizando información...
+                    </p>
+               </div>
+               <div class="countdown-card">
+                    <span>Próximo inicio</span>
+                    <strong id="countdown">
+                        --:--:--
+                    </strong>
+               </div>
+            </div>
+        <div
+          id="todayMatches"
+          class="today-matches">
         </div>
+
+      </div>
 
         <div class="kpi-grid">
           <article><span>Partidos</span><strong id="totalMatches">0</strong></article>
@@ -92,8 +110,10 @@
 
       <section id="paises" class="panel">
         <div class="section-title">
-          <h2>Consulta por país</h2>
-          <p>Busca una selección participante del Mundial 2026.</p>
+          <h2 id="countryTitle">Consulta por país</h2>
+          <p id="countrySubtitle">
+              Busca una selección participante del Mundial 2026.
+          </p>
         </div>
 
         <div class="searchBox">
@@ -106,24 +126,33 @@
 
       <section id="grupos" class="panel">
         <div class="section-title">
-          <h2>Clasificación por grupos</h2>
-          <p>Tabla actualizada con puntos y diferencia de gol.</p>
+          <h2 id="groupsTitle">Clasificación por grupos</h2>
+          <p id="groupsSubtitle">
+              Tabla actualizada con puntos y diferencia de gol.
+          </p>p>
         </div>
         <div id="groupsGrid" class="groups"></div>
       </section>
 
       <section id="llaves" class="panel">
         <div class="section-title">
-          <h2>Llaves de eliminación directa</h2>
-          <p>Se mostrarán cuando existan clasificados confirmados.</p>
+          <h2 id="bracketTitle">Llaves de eliminación directa</h2>
+          <p id="bracketSubtitle">
+              Se mostrarán cuando existan clasificados confirmados.
+          </p>
         </div>
         <div id="bracket" class="bracket"></div>
       </section>
 
       <section id="pronostico" class="panel">
         <div class="section-title">
-          <h2>Mi pronóstico del Mundial 2026</h2>
-          <p>Construye tu llave personalizada y descubre tu campeón proyectado.</p>
+          <h2 id="predictionTitle">
+              Mi pronóstico del Mundial 2026
+          </h2>
+
+          <p id="predictionSubtitle">
+              Construye tu llave personalizada y descubre tu campeón proyectado.
+          </p>
         </div>
 
         <div class="prediction-toolbar">
@@ -151,16 +180,26 @@
 
       <section id="estadisticas" class="panel">
         <div class="section-title">
-          <h2>Estadísticas del torneo</h2>
-          <p>Resumen visual de partidos, goles y estados del torneo.</p>
+          <h2 id="statsTitle">
+              Estadísticas del torneo
+          </h2>
+
+          <p id="statsSubtitle">
+              Resumen visual de partidos, goles y estados del torneo.
+          </p>
         </div>
         <div id="statsPanel" class="stats-grid"></div>
       </section>
 
       <section id="asistente" class="panel">
         <div class="section-title">
-          <h2>Guía fácil del Mundial</h2>
-          <p>Explicaciones simples para usuarios que no conocen mucho de fútbol.</p>
+          <h2 id="guideTitle">
+              Guía fácil del Mundial
+          </h2>
+    
+          <p id="guideSubtitle">
+              Explicaciones simples para usuarios que no conocen mucho de fútbol.
+          </p>
         </div>
 
         <div class="guide-grid">
