@@ -159,17 +159,21 @@ function getMatchStage(match) {
 }
 
 function formatGroupName(groupName) {
-  const value = String(groupName || "");
 
-  const letter =
-    value.match(/[A-L]$/i)?.[0] ||
-    value.match(/GROUP_([A-L])/i)?.[1];
+    const value = String(groupName || "").toUpperCase();
 
-  if (!letter) return value;
+    // Extrae la letra del grupo (A, B, C...)
+    const letter = value.replace(/[^A-L]/g, "");
 
-  return getLanguage() === "es"
-    ? `Grupo ${letter.toUpperCase()}`
-    : `Group ${letter.toUpperCase()}`;
+    if (!letter) {
+        return getLanguage() === "es"
+            ? "Fase de grupos"
+            : "Group Stage";
+    }
+
+    return getLanguage() === "es"
+        ? `Grupo ${letter}`
+        : `Group ${letter}`;
 }
 
 function renderGroups() {
