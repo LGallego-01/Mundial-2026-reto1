@@ -180,25 +180,49 @@ function renderBracket() {
   const container = document.getElementById("bracket");
   if (!container) return;
 
-  const knockoutMatches = window.appState.matches.filter(match => match.stage !== "GROUP_STAGE");
-  console.log(knockoutMatches);
+  const knockoutMatches = window.appState.matches
+    .filter(match => match.stage !== "GROUP_STAGE")
+    .slice(0, 16);
+
   if (!knockoutMatches.length) {
     container.innerHTML = `
-      <div class="round">
-        <h3>Llaves</h3>
+      <div class="bracket-empty">
+        <h3>🏆 Llaves oficiales</h3>
         <p>Las llaves se mostrarán cuando existan clasificados confirmados.</p>
       </div>
     `;
     return;
   }
 
-  container.innerHTML = knockoutMatches.map(match => `
-    <div class="round">
-      <h3>${formatStage(match.stage)}</h3>
-      <p>${teamName(match.homeTeam)} vs ${teamName(match.awayTeam)}</p>
-      <p class="muted">${localTime(match.utcDate)}</p>
+  container.innerHTML = `
+    <div class="bracket-header-card">
+      <span>🏆 Eliminación directa</span>
+      <h3>Camino a la final</h3>
+      <p>Las posiciones pendientes se muestran como “Por definir” hasta que la FIFA confirme los clasificados.</p>
     </div>
-  `).join("");
+
+    <div class="bracket-grid-pro">
+      ${knockoutMatches.map(match => `
+        <article class="bracket-match-card">
+          <div class="bracket-stage">${formatStage(match.stage)}</div>
+
+          <div class="bracket-team">
+            <strong>${teamName(match.homeTeam)}</strong>
+          </div>
+
+          <div class="bracket-vs">VS</div>
+
+          <div class="bracket-team">
+            <strong>${teamName(match.awayTeam)}</strong>
+          </div>
+
+          <div class="bracket-date">
+            ${localTime(match.utcDate)}
+          </div>
+        </article>
+      `).join("")}
+    </div>
+  `;
 }
 
 function changeLanguage() {
