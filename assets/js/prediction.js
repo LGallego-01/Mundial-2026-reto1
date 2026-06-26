@@ -69,23 +69,29 @@ function getRealKnockoutMatches(matches, stage) {
         winner: null
       };
     })
-    .filter(match => match.home || match.away);
+    .filter(match => match.home && match.away);
 }
 
 function getBestAvailableTeamsFromStandings(standings) {
-  return standings
+  const fromStandings = standings
     .flatMap(group => group.table || [])
-    .filter(row => isValidTeam(row.team))
+    .filter(row => row.team && row.team.id)
     .sort((a, b) => {
       if ((b.points ?? 0) !== (a.points ?? 0)) return (b.points ?? 0) - (a.points ?? 0);
       if ((b.goalDifference ?? 0) !== (a.goalDifference ?? 0)) return (b.goalDifference ?? 0) - (a.goalDifference ?? 0);
       return (b.goalsFor ?? 0) - (a.goalsFor ?? 0);
     })
     .map(row => row.team);
+
+  const fromTeams = (window.appState?.teams || [])
+    .filter(team => team && team.id);
+
+  return mergeUniqueTeams(fromStandings, fromTeams);
 }
 
 function nextAvailableCandidate(candidates, usedIds) {
-  return candidates.find(team => !usedIds.has(team.id)) || null;
+  const team = candidates.find(team => team?.id && !usedIds.has(team.id));
+  return team || null;
 }
 
 function isValidTeam(team) {
