@@ -8,70 +8,42 @@ let predictionRounds = [];
 
 function generatePrediction() {
   const matches = window.appState?.matches || [];
-  const standings = window.appState?.standings || [];
 
-  const realKnockoutMatches = getRealKnockoutMatches(matches);
-const projectedTeams = getTeamsFromStandings(standings);
+  const round32Matches = getRealKnockoutMatches(matches, "LAST_32");
 
-predictionTeams = mergeUniqueTeams(
-  realKnockoutMatches.flatMap(match => [match.home, match.away]).filter(Boolean),
-  projectedTeams
-).slice(0, 32);
+  if (!round32Matches.length) {
+    alert("Todavía no hay cruces reales suficientes para generar el pronóstico.");
+    return;
+  }
 
-if (!realKnockoutMatches.length && !predictionTeams.length) {
-  alert("No hay datos suficientes para generar el pronóstico.");
-  return;
-}
+  predictionTeams = mergeUniqueTeams(
+    round32Matches.flatMap(match => [match.home, match.away]).filter(Boolean)
+  );
 
-predictionRounds = [
-  {
-    name: getLanguage() === "es" ? "Ronda de 32" : "Round of 32",
-    matches: realKnockoutMatches.length
-      ? realKnockoutMatches
-      : buildRound("Ronda de 32", predictionTeams).matches
-  },
-  buildEmptyRound(getLanguage() === "es" ? "Octavos" : "Round of 16", 16),
-  buildEmptyRound(getLanguage() === "es" ? "Cuartos" : "Quarter-finals", 8),
-  buildEmptyRound(getLanguage() === "es" ? "Semifinal" : "Semi-finals", 4),
-  buildEmptyRound(getLanguage() === "es" ? "Final" : "Final", 2)
-];
-
-  //autoAdvanceByStrength();
+  predictionRounds = [
+    {
+      name: getLanguage() === "es" ? "Ronda de 32" : "Round of 32",
+      matches: round32Matches
+    },
+    buildEmptyRound(getLanguage() === "es" ? "Octavos" : "Round of 16", 16),
+    buildEmptyRound(getLanguage() === "es" ? "Cuartos" : "Quarter-finals", 8),
+    buildEmptyRound(getLanguage() === "es" ? "Semifinal" : "Semi-finals", 4),
+    buildEmptyRound(getLanguage() === "es" ? "Final" : "Final", 2)
+  ];
 
   renderPrediction();
   updatePredictionPanel();
 }
 
-function getTeamsFromKnockout(matches) {
-  const teams = [];
-
-  matches
-    .filter(match => match.stage !== "GROUP_STAGE")
-    .forEach(match => {
-      [match.homeTeam, match.awayTeam].forEach(team => {
-        if (isValidTeam(team)) teams.push(team);
-      });
-    });
-
-  return teams;
-}
-
-function getTeamsFromStandings(standings) {
-  const teams = [];
-
-  standings.forEach(group => {
-    const sorted = [...(group.table || [])].sort((a, b) => {
-      if ((b.points ?? 0) !== (a.points ?? 0)) return (b.points ?? 0) - (a.points ?? 0);
-      if ((b.goalDifference ?? 0) !== (a.goalDifference ?? 0)) return (b.goalDifference ?? 0) - (a.goalDifference ?? 0);
-      return (b.goalsFor ?? 0) - (a.goalsFor ?? 0);
-    });
-
-    sorted.slice(0, 2).forEach(row => {
-      if (isValidTeam(row.team)) teams.push(row.team);
-    });
-  });
-
-  return teams;
+function getRealKnockoutMatches(matches, stage) {
+  return matches
+    .filter(match => match.stage === stage)
+    .map(match => ({
+      home: isValidTeam(match.homeTeam) ? match.homeTeam : null,
+      away: isValidTeam(match.awayTeam) ? match.awayTeam : null,
+      winner: null
+    }))
+    .filter(match => match.home || match.away);
 }
 
 function isValidTeam(team) {
@@ -100,67 +72,18 @@ function mergeUniqueTeams(...lists) {
   return [...map.values()];
 }
 
-function buildRound(name, teams) {
+function buildEmptyRound(name, slots) {
   const matches = [];
 
-  for (let i = 0; i < teams.length; i += 2) {
+  for (let i = 0; i < slots; i += 2) {
     matches.push({
-      home: teams[i],
-      away: teams[i + 1] || null,
+      home: null,
+      away: null,
       winner: null
     });
   }
 
   return { name, matches };
-}
-
-function buildEmptyRound(name, slots) {
-  const teams = Array.from({ length: slots }, () => null);
-  return buildRound(name, teams);
-}
-
-function teamStrength(team) {
-  const standings = window.appState?.standings || [];
-
-  for (const group of standings) {
-    const row = group.table?.find(item => item.team.id === team?.id);
-
-    if (row) {
-      return (
-        (row.points ?? 0) * 100 +
-        (row.goalDifference ?? 0) * 10 +
-        (row.goalsFor ?? 0)
-      );
-    }
-  }
-
-  return 0;
-}
-
-function pickWinner(home, away) {
-  if (!home) return away;
-  if (!away) return home;
-
-  return teamStrength(home) >= teamStrength(away) ? home : away;
-}
-
-function autoAdvanceByStrength() {
-  for (let roundIndex = 0; roundIndex < predictionRounds.length - 1; roundIndex++) {
-    const round = predictionRounds[roundIndex];
-
-    round.matches.forEach((match, matchIndex) => {
-      const winner = pickWinner(match.home, match.away);
-      match.winner = winner;
-
-      const nextRound = predictionRounds[roundIndex + 1];
-      const nextMatchIndex = Math.floor(matchIndex / 2);
-      const nextSide = matchIndex % 2 === 0 ? "home" : "away";
-
-      if (nextRound?.matches?.[nextMatchIndex]) {
-        nextRound.matches[nextMatchIndex][nextSide] = winner;
-      }
-    });
-  }
 }
 
 function renderPrediction() {
@@ -187,7 +110,7 @@ function renderPrediction() {
 
 function predictionTeamButton(team, roundIndex, matchIndex, side, winner) {
   if (!team) {
-    return `<div class="prediction-team"><span>Por definir</span><small>-</small></div>`;
+    return `<div class="prediction-team empty"><span>Por definir</span><small>-</small></div>`;
   }
 
   const isWinner = winner?.id === team.id ? "winner" : "";
@@ -218,10 +141,26 @@ function selectPredictionWinner(roundIndex, matchIndex, side) {
     nextRound.matches[nextMatchIndex][nextSide] = winner;
   }
 
-  // No avanzar automáticamente: el usuario escoge cada ganador.
+  clearFollowingRounds(roundIndex + 1);
 
   renderPrediction();
   updatePredictionPanel();
+}
+
+function clearFollowingRounds(startRoundIndex) {
+  for (let i = startRoundIndex; i < predictionRounds.length; i++) {
+    predictionRounds[i].matches.forEach(match => {
+      match.winner = null;
+    });
+  }
+
+  for (let i = startRoundIndex + 1; i < predictionRounds.length; i++) {
+    predictionRounds[i].matches.forEach(match => {
+      match.home = null;
+      match.away = null;
+      match.winner = null;
+    });
+  }
 }
 
 function updatePredictionPanel() {
@@ -238,32 +177,18 @@ function updatePredictionPanel() {
       : "Por definir";
   }
 
-  const candidates = [...predictionTeams]
-    .sort((a, b) => teamStrength(b) - teamStrength(a))
-    .slice(0, 5)
-    .map((team, index) => ({
-      team,
-      odds: Math.max(10, 38 - index * 5)
-    }));
-
   if (oddsContainer) {
-    oddsContainer.innerHTML = candidates.map(item => `
-      <div class="odds-item">
-        <div class="odds-row">
-          <span>${teamName(item.team)}</span>
-          <strong>${item.odds}%</strong>
-        </div>
-        <div class="odds-bar">
-          <span style="width:${item.odds}%"></span>
-        </div>
-      </div>
-    `).join("");
+    oddsContainer.innerHTML = `
+      <p class="muted">
+        El pronóstico se completa manualmente seleccionando ganadores ronda por ronda.
+      </p>
+    `;
   }
 
   if (analysis) {
     analysis.textContent = champion
-      ? `${teamName(champion)} aparece como campeón proyectado usando equipos ya presentes en llaves y clasificación actual.`
-      : "El pronóstico se genera con los equipos definidos por la API y la tabla de grupos.";
+      ? `${teamName(champion)} es tu campeón proyectado.`
+      : "Selecciona los ganadores de cada cruce real para construir tu llave.";
   }
 }
 
@@ -283,14 +208,4 @@ function resetPrediction() {
   if (champion) champion.textContent = "Por definir";
   if (odds) odds.innerHTML = "";
   if (analysis) analysis.textContent = "El análisis se generará según tu pronóstico.";
-}
-function getRealKnockoutMatches(matches) {
-  return matches
-    .filter(match => match.stage === "LAST_32")
-    .map(match => ({
-      home: isValidTeam(match.homeTeam) ? match.homeTeam : null,
-      away: isValidTeam(match.awayTeam) ? match.awayTeam : null,
-      winner: null
-    }))
-    .filter(match => match.home || match.away);
 }
