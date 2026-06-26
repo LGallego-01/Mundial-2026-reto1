@@ -45,6 +45,9 @@ function matchCard(match) {
 
   return `
     <article class="card">
+      <small class="match-group">
+         ${formatStage(match.stage)}
+      <small>
       <span class="pill">${statusLabel(statusOf(match))}</span>
       <h3>${teamName(match.homeTeam)} vs ${teamName(match.awayTeam)}</h3>
       <div class="score">${homeScore} - ${awayScore}</div>
