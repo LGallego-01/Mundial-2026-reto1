@@ -1,1 +1,172 @@
+/* ==========================
+   RESET GENERAL
+========================== */
 
+*,
+*::before,
+*::after{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+
+    background:linear-gradient(
+        135deg,
+        var(--bg-soft),
+        var(--bg)
+    );
+
+    color:var(--text);
+
+    font-family:
+        "Segoe UI",
+        Inter,
+        Roboto,
+        Arial,
+        sans-serif;
+
+    min-height:100vh;
+
+    overflow-x:hidden;
+
+    line-height:1.5;
+}
+
+/* ==========================
+   TIPOGRAFÍA
+========================== */
+
+h1,h2,h3,h4,h5{
+
+    color:var(--text-strong);
+
+    font-weight:800;
+
+}
+
+h1{
+
+    font-size:3.7rem;
+
+    line-height:1;
+
+}
+
+h2{
+
+    font-size:2.3rem;
+
+}
+
+h3{
+
+    font-size:1.45rem;
+
+}
+
+p{
+
+    color:var(--muted);
+
+    font-size:1rem;
+
+}
+
+/* ==========================
+   LINKS
+========================== */
+
+a{
+
+    text-decoration:none;
+
+    color:inherit;
+
+}
+
+/* ==========================
+   BOTONES
+========================== */
+
+button{
+
+    cursor:pointer;
+
+    border:none;
+
+    outline:none;
+
+    transition:.25s;
+
+    font-family:inherit;
+
+}
+
+button:hover{
+
+    transform:translateY(-2px);
+
+}
+
+/* ==========================
+   INPUTS
+========================== */
+
+input,
+select{
+
+    font-family:inherit;
+
+    border:none;
+
+    outline:none;
+
+}
+
+/* ==========================
+   IMÁGENES
+========================== */
+
+img{
+
+    max-width:100%;
+
+    display:block;
+
+}
+
+/* ==========================
+   SCROLL
+========================== */
+
+::-webkit-scrollbar{
+
+    width:10px;
+
+}
+
+::-webkit-scrollbar-track{
+
+    background:#edf4f8;
+
+}
+
+::-webkit-scrollbar-thumb{
+
+    background:#c7dbe8;
+
+    border-radius:20px;
+
+}
+
+::-webkit-scrollbar-thumb:hover{
+
+    background:#9ab9d2;
+
+}
