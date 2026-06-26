@@ -670,3 +670,99 @@ body.dark .bracket-match-card {
 body.dark .bracket-team {
   background: var(--surface-soft);
 }
+
+/*==========================================
+    BRACKET FIFA
+==========================================*/
+
+.bracket-stage-section{
+
+    margin-bottom:40px;
+
+}
+
+.bracket-stage-title{
+
+    font-size:2rem;
+
+    font-weight:900;
+
+    margin-bottom:18px;
+
+    color:var(--text);
+
+    border-left:6px solid var(--blue);
+
+    padding-left:14px;
+
+}
+
+.bracket-grid-pro{
+
+    display:grid;
+
+    grid-template-columns:repeat(auto-fit,minmax(270px,1fr));
+
+    gap:20px;
+
+}
+
+.bracket-match-card{
+
+    background:var(--surface);
+
+    border:1px solid var(--border);
+
+    border-radius:22px;
+
+    padding:22px;
+
+    box-shadow:var(--shadow);
+
+    transition:.25s;
+
+}
+
+.bracket-match-card:hover{
+
+    transform:translateY(-4px);
+
+}
+
+.bracket-team{
+
+    padding:12px;
+
+    border-radius:14px;
+
+    background:var(--surface-soft);
+
+    font-size:1.05rem;
+
+    text-align:center;
+
+}
+
+.bracket-vs{
+
+    text-align:center;
+
+    margin:12px 0;
+
+    font-weight:900;
+
+    color:var(--blue);
+
+}
+
+.bracket-date{
+
+    margin-top:16px;
+
+    text-align:center;
+
+    color:var(--muted);
+
+    font-size:.9rem;
+
+}
