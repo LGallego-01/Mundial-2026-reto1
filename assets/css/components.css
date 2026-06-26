@@ -766,3 +766,17 @@ body.dark .bracket-team {
     font-size:.9rem;
 
 }
+
+/* ===============================
+   ETAPA DEL PARTIDO
+================================ */
+
+.match-group{
+    display:block;
+    margin-bottom:8px;
+    font-size:.75rem;
+    font-weight:700;
+    color:#6b7b8c;
+    text-transform:uppercase;
+    letter-spacing:1px;
+}
