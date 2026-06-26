@@ -20,6 +20,8 @@ const dictionary = {
     actualizar: "Actualizar",
     proximoPartido: "Próximo partido",
     cargando: "Cargando información...",
+    hoyMundial: "🔥 HOY EN EL MUNDIAL",
+    proximoInicio: "Próximo inicio",
     sincronizando: "Sincronizando datos del torneo.",
     partidosKpi: "Partidos",
     finalizados: "Finalizados",
@@ -84,6 +86,8 @@ const dictionary = {
     guia: "Easy Guide",
     actualizar: "Refresh",
     proximoPartido: "Next match",
+    hoyMundial: "🔥 TODAY AT THE WORLD CUP",
+    proximoInicio: "Next kickoff",
     cargando: "Loading information...",
     sincronizando: "Syncing tournament data.",
     partidosKpi: "Matches",
@@ -238,6 +242,12 @@ function applyStaticTranslations() {
 
   const label = document.querySelector(".hero-card .label");
   if (label) label.textContent = t("proximoPartido");
+
+  const heroBadge = document.querySelector(".hero-badge");
+  if (heroBadge) heroBadge.textContent = t("hoyMundial");
+
+  const countdownTitle = document.querySelector(".countdown-card span");
+  if (countdownTitle) countdownTitle.textContent = t("proximoInicio");
 
   const kpis = document.querySelectorAll(".kpi-grid article span");
   const kpiKeys = ["partidosKpi", "finalizados", "enVivo", "equipos"];
