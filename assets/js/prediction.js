@@ -226,12 +226,50 @@ function updatePredictionPanel() {
   }
 
   if (oddsContainer) {
-    oddsContainer.innerHTML = `
-      <p class="muted">
-        El pronóstico se completa manualmente seleccionando ganadores ronda por ronda.
-      </p>
-    `;
-  }
+
+  const standings = window.appState.standings || [];
+
+  const ranking = standings
+    .flatMap(group => group.table)
+    .sort((a,b)=>{
+
+      if (b.points !== a.points)
+        return b.points-a.points;
+
+      if (b.goalDifference !== a.goalDifference)
+        return b.goalDifference-a.goalDifference;
+
+      return b.goalsFor-a.goalsFor;
+
+    })
+    .slice(0,5);
+
+  const maxPoints = ranking[0]?.points || 1;
+
+  oddsContainer.innerHTML = ranking.map(team=>{
+
+      const probability = Math.round(
+        (team.points/maxPoints)*100
+      );
+
+      return `
+        <div class="odds-item">
+
+            <div class="odds-row">
+                <span>${teamName(team.team)}</span>
+                <strong>${probability}%</strong>
+            </div>
+
+            <div class="odds-bar">
+                <span style="width:${probability}%"></span>
+            </div>
+
+        </div>
+      `;
+
+  }).join("");
+
+}
 
   if (analysis) {
     analysis.textContent = champion
