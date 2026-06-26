@@ -57,7 +57,18 @@ const dictionary = {
     derrotaDesc: "No suma puntos.",
     diferenciaGol: "Diferencia de gol",
     diferenciaGolDesc: "Goles a favor menos goles en contra.",
-    llaveDesc: "Desde eliminación directa, si pierdes quedas fuera."
+    llaveDesc: "Desde eliminación directa, si pierdes quedas fuera.",
+    actualizando: "Actualizando datos del Mundial...",
+    actualizado: "Datos actualizados correctamente con horario local automático.",
+    noPartidosFiltro: "No hay partidos para este filtro.",
+    paisNoParticipante: "País no participante",
+    paisNoParticipanteDesc: "no aparece entre las selecciones registradas para el Mundial 2026.",
+    codigo: "Código",
+    grupo: "Grupo",
+    porDefinir: "Por definir",
+    partidosEncontrados: "Partidos encontrados",
+    equipo: "Equipo",
+    dg: "DG"
   },
 
   en: {
@@ -111,7 +122,18 @@ const dictionary = {
     derrotaDesc: "No points are awarded.",
     diferenciaGol: "Goal difference",
     diferenciaGolDesc: "Goals scored minus goals conceded.",
-    llaveDesc: "In knockout rounds, if you lose, you are eliminated."
+    llaveDesc: "In knockout rounds, if you lose, you are eliminated.", 
+    actualizando: "Updating World Cup data...",
+    actualizado: "Data updated successfully with automatic local time.",
+    noPartidosFiltro: "No matches for this filter.",
+    paisNoParticipante: "Country not participating",
+    paisNoParticipanteDesc: "is not listed among the registered teams for the 2026 World Cup.",
+    codigo: "Code", 
+    grupo: "Group",
+    porDefinir: "TBD",
+    partidosEncontrados: "Matches found",
+    equipo: "Team",
+    dg: "GD"
   }
 };
 
