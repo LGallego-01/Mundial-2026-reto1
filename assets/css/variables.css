@@ -25,3 +25,25 @@
 
   --sidebar-width: 260px;
 }
+
+body.dark {
+  --bg: #071827;
+  --bg-soft: #0b2135;
+  --surface: #10263a;
+  --surface-soft: #16354f;
+
+  --text: #dbeafe;
+  --text-strong: #ffffff;
+  --muted: #9fb7cc;
+
+  --navy: #020b14;
+  --navy-2: #06192a;
+  --blue: #4f8cff;
+  --cyan: #22d3c5;
+  --gold: #f7c948;
+  --green: #34d399;
+  --red: #fb7185;
+
+  --border: #29465f;
+  --shadow: 0 18px 45px rgba(0, 0, 0, 0.35);
+}
