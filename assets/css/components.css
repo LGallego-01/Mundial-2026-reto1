@@ -437,3 +437,90 @@ body.dark tr:hover {
     background:transparent;
     padding:0;
 }
+
+/* ======================================================
+   HERO DASHBOARD
+====================================================== */
+
+.hero-card{
+    background: linear-gradient(135deg,#0a3552 0%,#145c7d 100%);
+    color:#fff;
+    border-radius:28px;
+    padding:34px;
+    margin-bottom:28px;
+    box-shadow:0 18px 45px rgba(0,0,0,.18);
+}
+
+.hero-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    gap:30px;
+}
+
+.hero-badge{
+    display:inline-block;
+    padding:8px 18px;
+    background:rgba(255,255,255,.18);
+    border-radius:999px;
+    font-size:.82rem;
+    font-weight:700;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    margin-bottom:18px;
+}
+
+.hero-card h2{
+    font-size:2.2rem;
+    margin:0 0 12px;
+    font-weight:800;
+    line-height:1.15;
+}
+
+.hero-card p{
+    color:rgba(255,255,255,.82);
+    font-size:1rem;
+    margin:0;
+}
+
+.countdown-card{
+    background:rgba(255,255,255,.14);
+    backdrop-filter:blur(10px);
+    border-radius:22px;
+    padding:20px 28px;
+    min-width:180px;
+    text-align:center;
+}
+
+.countdown-card span{
+    display:block;
+    font-size:.85rem;
+    opacity:.8;
+    margin-bottom:8px;
+}
+
+.countdown-card strong{
+    display:block;
+    font-size:2rem;
+    font-weight:800;
+    letter-spacing:1px;
+}
+
+.today-matches{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:14px;
+    margin-top:28px;
+}
+
+.today-match{
+    background:rgba(255,255,255,.12);
+    border-radius:18px;
+    padding:16px;
+    transition:.25s;
+}
+
+.today-match:hover{
+    transform:translateY(-4px);
+    background:rgba(255,255,255,.20);
+}
