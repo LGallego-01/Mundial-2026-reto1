@@ -257,23 +257,42 @@ function applyStaticTranslations() {
   
   // -------- NUEVOS TITULOS --------
 
-  document.getElementById("countryTitle")?.textContent = t("consultaPais");
-  document.getElementById("countrySubtitle")?.textContent = t("consultaPaisDesc");
+  const countryTitle = document.getElementById("countryTitle");
+  if (countryTitle) countryTitle.textContent = t("consultaPais");
 
-  document.getElementById("groupsTitle")?.textContent = t("clasificacion");
-  document.getElementById("groupsSubtitle")?.textContent = t("clasificacionDesc");
+  const countrySubtitle = document.getElementById("countrySubtitle");
+  if (countrySubtitle) countrySubtitle.textContent = t("consultaPaisDesc");
 
-  document.getElementById("bracketTitle")?.textContent = t("eliminacion");
-  document.getElementById("bracketSubtitle")?.textContent = t("eliminacionDesc");
+  const groupsTitle = document.getElementById("groupsTitle");
+  if (groupsTitle) groupsTitle.textContent = t("clasificacion");
 
-  document.getElementById("predictionTitle")?.textContent = t("miPronostico");
-  document.getElementById("predictionSubtitle")?.textContent = t("pronosticoDesc");
+  const groupsSubtitle = document.getElementById("groupsSubtitle");
+  if (groupsSubtitle) groupsSubtitle.textContent = t("clasificacionDesc");
 
-  document.getElementById("statsTitle")?.textContent = t("estadisticasTitulo");
-  document.getElementById("statsSubtitle")?.textContent = t("estadisticasDesc");
+  const bracketTitle = document.getElementById("bracketTitle");
+  if (bracketTitle) bracketTitle.textContent = t("eliminacion");
 
-  document.getElementById("guideTitle")?.textContent = t("guiaTitulo");
-  document.getElementById("guideSubtitle")?.textContent = t("guiaDesc");
+  const bracketSubtitle = document.getElementById("bracketSubtitle");
+  if (bracketSubtitle) bracketSubtitle.textContent = t("eliminacionDesc");
 
+  const predictionTitle = document.getElementById("predictionTitle");
+  if (predictionTitle) predictionTitle.textContent = t("miPronostico");
+
+  const predictionSubtitle = document.getElementById("predictionSubtitle");
+  if (predictionSubtitle) predictionSubtitle.textContent = t("pronosticoDesc");
+
+  const statsTitle = document.getElementById("statsTitle");
+  if (statsTitle) statsTitle.textContent = t("estadisticasTitulo");
+
+  const statsSubtitle = document.getElementById("statsSubtitle");
+  if (statsSubtitle) statsSubtitle.textContent = t("estadisticasDesc");
+
+  const guideTitle = document.getElementById("guideTitle");
+  if (guideTitle) guideTitle.textContent = t("guiaTitulo");
+
+  const guideSubtitle = document.getElementById("guideSubtitle");
+  if (guideSubtitle) guideSubtitle.textContent = t("guiaDesc");
+   
+ 
 }
 
