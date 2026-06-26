@@ -177,54 +177,114 @@ function renderGroups() {
   `).join("");
 }
 function renderBracket() {
+
   const container = document.getElementById("bracket");
+
   if (!container) return;
 
-  const knockoutMatches = window.appState.matches
-    .filter(match => match.stage !== "GROUP_STAGE")
-    .slice(0, 16);
+  const knockoutMatches = window.appState.matches.filter(
+    match => match.stage !== "GROUP_STAGE"
+  );
 
   if (!knockoutMatches.length) {
+
     container.innerHTML = `
       <div class="bracket-empty">
         <h3>🏆 Llaves oficiales</h3>
-        <p>Las llaves se mostrarán cuando existan clasificados confirmados.</p>
+        <p>Las llaves aparecerán cuando finalice la fase de grupos.</p>
       </div>
     `;
+
     return;
+
   }
 
-  container.innerHTML = `
-    <div class="bracket-header-card">
-      <span>🏆 Eliminación directa</span>
-      <h3>Camino a la final</h3>
-      <p>Las posiciones pendientes se muestran como “Por definir” hasta que la FIFA confirme los clasificados.</p>
-    </div>
+  const stages = [
+    {
+      key: "LAST_32",
+      title: getLanguage() === "es" ? "🏆 Ronda de 32" : "🏆 Round of 32"
+    },
+    {
+      key: "LAST_16",
+      title: getLanguage() === "es" ? "⚽ Octavos de final" : "⚽ Round of 16"
+    },
+    {
+      key: "QUARTER_FINALS",
+      title: getLanguage() === "es" ? "🥇 Cuartos de final" : "🥇 Quarter-finals"
+    },
+    {
+      key: "SEMI_FINALS",
+      title: getLanguage() === "es" ? "🔥 Semifinales" : "🔥 Semi-finals"
+    },
+    {
+      key: "THIRD_PLACE",
+      title: getLanguage() === "es" ? "🥉 Tercer puesto" : "🥉 Third place"
+    },
+    {
+      key: "FINAL",
+      title: getLanguage() === "es" ? "🏆 Final" : "🏆 Final"
+    }
+  ];
 
-    <div class="bracket-grid-pro">
-      ${knockoutMatches.map(match => `
-        <article class="bracket-match-card">
-          <div class="bracket-stage">${formatStage(match.stage)}</div>
+  container.innerHTML = stages.map(stage => {
 
-          <div class="bracket-team">
-            <strong>${teamName(match.homeTeam)}</strong>
-          </div>
+    const matches = knockoutMatches.filter(
+      m => m.stage === stage.key
+    );
 
-          <div class="bracket-vs">VS</div>
+    if (!matches.length) return "";
 
-          <div class="bracket-team">
-            <strong>${teamName(match.awayTeam)}</strong>
-          </div>
+    return `
 
-          <div class="bracket-date">
-            ${localTime(match.utcDate)}
-          </div>
-        </article>
-      `).join("")}
-    </div>
-  `;
+      <section class="bracket-stage-section">
+
+        <h2 class="bracket-stage-title">
+          ${stage.title}
+        </h2>
+
+        <div class="bracket-grid-pro">
+
+          ${matches.map(match => `
+
+            <article class="bracket-match-card">
+
+              <div class="bracket-team">
+
+                <strong>${teamName(match.homeTeam)}</strong>
+
+              </div>
+
+              <div class="bracket-vs">
+
+                VS
+
+              </div>
+
+              <div class="bracket-team">
+
+                <strong>${teamName(match.awayTeam)}</strong>
+
+              </div>
+
+              <div class="bracket-date">
+
+                ${localTime(match.utcDate)}
+
+              </div>
+
+            </article>
+
+          `).join("")}
+
+        </div>
+
+      </section>
+
+    `;
+
+  }).join("");
+
 }
-
 function changeLanguage() {
   const language = document.getElementById("languageSelect")?.value || "es";
 
