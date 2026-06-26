@@ -44,23 +44,10 @@ function matchCard(match) {
   const awayScore = match.score?.fullTime?.away ?? "-";
 
   return `
-    <article class="card match-card-pro">
+    <article class="card">
       <span class="pill">${statusLabel(statusOf(match))}</span>
-
-      <div class="teams-row">
-        <div class="team-side">
-          <img src="${match.homeTeam?.crest || ""}" alt="${teamName(match.homeTeam)}" class="team-flag">
-          <strong>${teamName(match.homeTeam)}</strong>
-        </div>
-
-        <div class="score">${homeScore} - ${awayScore}</div>
-
-        <div class="team-side right">
-          <strong>${teamName(match.awayTeam)}</strong>
-          <img src="${match.awayTeam?.crest || ""}" alt="${teamName(match.awayTeam)}" class="team-flag">
-        </div>
-      </div>
-
+      <h3>${teamName(match.homeTeam)} vs ${teamName(match.awayTeam)}</h3>
+      <div class="score">${homeScore} - ${awayScore}</div>
       <p>${localTime(match.utcDate)}</p>
       <p class="muted">${smartMatchNote(match)}</p>
     </article>
@@ -69,23 +56,9 @@ function matchCard(match) {
 
 function matchCardCompact(match) {
   return `
-    <article class="card match-card-pro compact">
+    <article class="card">
       <span class="pill">${statusLabel(statusOf(match))}</span>
-
-      <div class="teams-row">
-        <div class="team-side">
-          <img src="${match.homeTeam?.crest || ""}" alt="${teamName(match.homeTeam)}" class="team-flag">
-          <strong>${teamName(match.homeTeam)}</strong>
-        </div>
-
-        <span class="versus">vs</span>
-
-        <div class="team-side right">
-          <strong>${teamName(match.awayTeam)}</strong>
-          <img src="${match.awayTeam?.crest || ""}" alt="${teamName(match.awayTeam)}" class="team-flag">
-        </div>
-      </div>
-
+      <h3>${teamName(match.homeTeam)} vs ${teamName(match.awayTeam)}</h3>
       <p>${localTime(match.utcDate)}</p>
       <p class="muted">${smartMatchNote(match)}</p>
     </article>
@@ -141,7 +114,10 @@ function searchCountry() {
 
   result.innerHTML = `
     <article class="card">
-      <h3>${teamName(team)}</h3>
+      <h3 class="country-title">
+        <img src="${team.crest || ""}" alt="${teamName(team)}" class="country-flag">
+        ${teamName(team)}
+      </h3>
       <p><b>Código:</b> ${team.tla}</p>
       <p><b>Grupo:</b> ${group || "Por definir"}</p>
       <p><b>Partidos encontrados:</b> ${matches.length}</p>
