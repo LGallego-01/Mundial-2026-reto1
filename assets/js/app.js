@@ -44,10 +44,23 @@ function matchCard(match) {
   const awayScore = match.score?.fullTime?.away ?? "-";
 
   return `
-    <article class="card">
+    <article class="card match-card-pro">
       <span class="pill">${statusLabel(statusOf(match))}</span>
-      <h3>${teamName(match.homeTeam)} vs ${teamName(match.awayTeam)}</h3>
-      <div class="score">${homeScore} - ${awayScore}</div>
+
+      <div class="teams-row">
+        <div class="team-side">
+          <img src="${match.homeTeam?.crest || ""}" alt="${teamName(match.homeTeam)}" class="team-flag">
+          <strong>${teamName(match.homeTeam)}</strong>
+        </div>
+
+        <div class="score">${homeScore} - ${awayScore}</div>
+
+        <div class="team-side right">
+          <strong>${teamName(match.awayTeam)}</strong>
+          <img src="${match.awayTeam?.crest || ""}" alt="${teamName(match.awayTeam)}" class="team-flag">
+        </div>
+      </div>
+
       <p>${localTime(match.utcDate)}</p>
       <p class="muted">${smartMatchNote(match)}</p>
     </article>
@@ -56,9 +69,23 @@ function matchCard(match) {
 
 function matchCardCompact(match) {
   return `
-    <article class="card">
+    <article class="card match-card-pro compact">
       <span class="pill">${statusLabel(statusOf(match))}</span>
-      <h3>${teamName(match.homeTeam)} vs ${teamName(match.awayTeam)}</h3>
+
+      <div class="teams-row">
+        <div class="team-side">
+          <img src="${match.homeTeam?.crest || ""}" alt="${teamName(match.homeTeam)}" class="team-flag">
+          <strong>${teamName(match.homeTeam)}</strong>
+        </div>
+
+        <span class="versus">vs</span>
+
+        <div class="team-side right">
+          <strong>${teamName(match.awayTeam)}</strong>
+          <img src="${match.awayTeam?.crest || ""}" alt="${teamName(match.awayTeam)}" class="team-flag">
+        </div>
+      </div>
+
       <p>${localTime(match.utcDate)}</p>
       <p class="muted">${smartMatchNote(match)}</p>
     </article>
