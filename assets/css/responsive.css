@@ -1,1 +1,177 @@
+/* ======================================================
+   TABLETS
+====================================================== */
 
+@media (max-width:1200px){
+
+    .prediction-layout{
+
+        grid-template-columns:1fr;
+
+    }
+
+    .topbar{
+
+        flex-direction:column;
+
+        align-items:flex-start;
+
+    }
+
+}
+
+/* ======================================================
+   TABLETS PEQUEÑAS
+====================================================== */
+
+@media (max-width:960px){
+
+    .app-shell{
+
+        grid-template-columns:1fr;
+
+    }
+
+    .sidebar{
+
+        position:relative;
+
+        height:auto;
+
+        padding-bottom:10px;
+
+    }
+
+    .menu{
+
+        grid-template-columns:repeat(2,1fr);
+
+    }
+
+    .menu button{
+
+        text-align:center;
+
+    }
+
+    .main-content{
+
+        padding:20px;
+
+    }
+
+    .hero-card{
+
+        grid-template-columns:1fr;
+
+    }
+
+    .kpi-grid{
+
+        grid-template-columns:repeat(2,1fr);
+
+    }
+
+}
+
+/* ======================================================
+   CELULARES
+====================================================== */
+
+@media (max-width:700px){
+
+    .hero-card{
+
+        padding:26px;
+
+    }
+
+    .hero-card h2{
+
+        font-size:2rem;
+
+    }
+
+    .topbar h1{
+
+        font-size:2.3rem;
+
+    }
+
+    .eyebrow{
+
+        font-size:.95rem;
+
+        letter-spacing:2px;
+
+    }
+
+    .countdown{
+
+        font-size:2.4rem;
+
+    }
+
+    .grid,
+    .groups,
+    .stats-grid,
+    .guide-grid{
+
+        grid-template-columns:1fr;
+
+    }
+
+    .filters,
+    .searchBox,
+    .prediction-toolbar{
+
+        flex-direction:column;
+
+    }
+
+    button,
+    select{
+
+        width:100%;
+
+    }
+
+}
+
+/* ======================================================
+   CELULARES PEQUEÑOS
+====================================================== */
+
+@media (max-width:480px){
+
+    .menu{
+
+        grid-template-columns:1fr;
+
+    }
+
+    .kpi-grid{
+
+        grid-template-columns:1fr;
+
+    }
+
+    .brand strong{
+
+        font-size:1.15rem;
+
+    }
+
+    .topbar h1{
+
+        font-size:2rem;
+
+    }
+
+    .hero-card h2{
+
+        font-size:1.7rem;
+
+    }
+
+}
