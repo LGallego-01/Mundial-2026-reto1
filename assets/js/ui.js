@@ -39,14 +39,24 @@ function localTime(dateValue) {
 }
 
 function formatStage(stage) {
+  const value = String(stage || "").toUpperCase();
+
   const labels = {
     LAST_32: getLanguage() === "es" ? "Ronda de 32" : "Round of 32",
+    ROUND_OF_32: getLanguage() === "es" ? "Ronda de 32" : "Round of 32",
+
     LAST_16: getLanguage() === "es" ? "Octavos de final" : "Round of 16",
+    ROUND_OF_16: getLanguage() === "es" ? "Octavos de final" : "Round of 16",
+
     QUARTER_FINALS: getLanguage() === "es" ? "Cuartos de final" : "Quarter-finals",
+    QUARTER_FINAL: getLanguage() === "es" ? "Cuartos de final" : "Quarter-finals",
+
     SEMI_FINALS: getLanguage() === "es" ? "Semifinal" : "Semi-finals",
+    SEMI_FINAL: getLanguage() === "es" ? "Semifinal" : "Semi-finals",
+
     THIRD_PLACE: getLanguage() === "es" ? "Tercer puesto" : "Third place",
     FINAL: getLanguage() === "es" ? "Final" : "Final"
   };
 
-  return labels[stage] || String(stage || "Llave").replaceAll("_", " ");
+  return labels[value] || value.replaceAll("_", " ");
 }
