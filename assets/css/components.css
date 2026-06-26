@@ -565,3 +565,108 @@ body.dark tr:hover {
   color: var(--blue);
   font-weight: 900;
 }
+
+/* ======================================================
+   LLAVES BONITAS
+====================================================== */
+
+.bracket {
+  display: grid;
+  gap: 22px;
+}
+
+.bracket-header-card,
+.bracket-empty {
+  background: linear-gradient(135deg, #08263d, #0d5b78);
+  color: white;
+  border-radius: 28px;
+  padding: 28px;
+  box-shadow: var(--shadow);
+}
+
+.bracket-header-card span {
+  display: inline-block;
+  background: rgba(255,255,255,.14);
+  padding: 8px 14px;
+  border-radius: 999px;
+  font-weight: 900;
+  margin-bottom: 12px;
+}
+
+.bracket-header-card h3,
+.bracket-empty h3 {
+  color: white;
+  font-size: 2rem;
+  margin-bottom: 8px;
+}
+
+.bracket-header-card p,
+.bracket-empty p {
+  color: rgba(255,255,255,.82);
+}
+
+.bracket-grid-pro {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 18px;
+}
+
+.bracket-match-card {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  padding: 20px;
+  box-shadow: var(--shadow);
+  position: relative;
+  overflow: hidden;
+}
+
+.bracket-match-card::after {
+  content: "🏆";
+  position: absolute;
+  right: -8px;
+  bottom: -18px;
+  font-size: 76px;
+  opacity: .06;
+}
+
+.bracket-stage {
+  display: inline-block;
+  background: #fff4d9;
+  color: #9a6900;
+  padding: 7px 12px;
+  border-radius: 999px;
+  font-weight: 900;
+  font-size: .78rem;
+  margin-bottom: 16px;
+}
+
+.bracket-team {
+  background: var(--surface-soft);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 14px;
+  font-size: 1.05rem;
+}
+
+.bracket-vs {
+  text-align: center;
+  color: var(--muted);
+  font-weight: 950;
+  margin: 10px 0;
+}
+
+.bracket-date {
+  margin-top: 14px;
+  color: var(--muted);
+  font-weight: 700;
+  font-size: .95rem;
+}
+
+body.dark .bracket-match-card {
+  background: var(--surface);
+}
+
+body.dark .bracket-team {
+  background: var(--surface-soft);
+}
