@@ -7,14 +7,18 @@ let predictionTeams = [];
 let predictionRounds = [];
 
 function generatePrediction() {
-  if (!window.appState?.teams?.length) {
-    alert("Primero carga los datos del torneo.");
+  const matches = window.appState?.matches || [];
+  const standings = window.appState?.standings || [];
+
+  const realKnockoutTeams = getTeamsFromKnockout(matches);
+  const projectedTeams = getTeamsFromStandings(standings);
+
+  predictionTeams = mergeUniqueTeams(realKnockoutTeams, projectedTeams).slice(0, 32);
+
+  if (!predictionTeams.length) {
+    alert("No hay datos suficientes para generar el pronóstico.");
     return;
   }
-
-  predictionTeams = [...window.appState.teams]
-    .sort(() => Math.random() - 0.5)
-    .slice(0, 32);
 
   predictionRounds = [
     buildRound("Ronda de 32", predictionTeams),
@@ -24,8 +28,68 @@ function generatePrediction() {
     buildEmptyRound("Final", 2)
   ];
 
+  autoAdvanceByStrength();
+
   renderPrediction();
   updatePredictionPanel();
+}
+
+function getTeamsFromKnockout(matches) {
+  const teams = [];
+
+  matches
+    .filter(match => match.stage !== "GROUP_STAGE")
+    .forEach(match => {
+      [match.homeTeam, match.awayTeam].forEach(team => {
+        if (isValidTeam(team)) teams.push(team);
+      });
+    });
+
+  return teams;
+}
+
+function getTeamsFromStandings(standings) {
+  const teams = [];
+
+  standings.forEach(group => {
+    const sorted = [...(group.table || [])].sort((a, b) => {
+      if ((b.points ?? 0) !== (a.points ?? 0)) return (b.points ?? 0) - (a.points ?? 0);
+      if ((b.goalDifference ?? 0) !== (a.goalDifference ?? 0)) return (b.goalDifference ?? 0) - (a.goalDifference ?? 0);
+      return (b.goalsFor ?? 0) - (a.goalsFor ?? 0);
+    });
+
+    sorted.slice(0, 2).forEach(row => {
+      if (isValidTeam(row.team)) teams.push(row.team);
+    });
+  });
+
+  return teams;
+}
+
+function isValidTeam(team) {
+  if (!team) return false;
+
+  const name = String(team.name || team.shortName || "").toLowerCase();
+
+  return (
+    team.id &&
+    !name.includes("tbd") &&
+    !name.includes("por definir") &&
+    !name.includes("winner") &&
+    !name.includes("runner")
+  );
+}
+
+function mergeUniqueTeams(...lists) {
+  const map = new Map();
+
+  lists.flat().forEach(team => {
+    if (team?.id && !map.has(team.id)) {
+      map.set(team.id, team);
+    }
+  });
+
+  return [...map.values()];
 }
 
 function buildRound(name, teams) {
@@ -34,7 +98,7 @@ function buildRound(name, teams) {
   for (let i = 0; i < teams.length; i += 2) {
     matches.push({
       home: teams[i],
-      away: teams[i + 1],
+      away: teams[i + 1] || null,
       winner: null
     });
   }
@@ -47,6 +111,50 @@ function buildEmptyRound(name, slots) {
   return buildRound(name, teams);
 }
 
+function teamStrength(team) {
+  const standings = window.appState?.standings || [];
+
+  for (const group of standings) {
+    const row = group.table?.find(item => item.team.id === team?.id);
+
+    if (row) {
+      return (
+        (row.points ?? 0) * 100 +
+        (row.goalDifference ?? 0) * 10 +
+        (row.goalsFor ?? 0)
+      );
+    }
+  }
+
+  return 0;
+}
+
+function pickWinner(home, away) {
+  if (!home) return away;
+  if (!away) return home;
+
+  return teamStrength(home) >= teamStrength(away) ? home : away;
+}
+
+function autoAdvanceByStrength() {
+  for (let roundIndex = 0; roundIndex < predictionRounds.length - 1; roundIndex++) {
+    const round = predictionRounds[roundIndex];
+
+    round.matches.forEach((match, matchIndex) => {
+      const winner = pickWinner(match.home, match.away);
+      match.winner = winner;
+
+      const nextRound = predictionRounds[roundIndex + 1];
+      const nextMatchIndex = Math.floor(matchIndex / 2);
+      const nextSide = matchIndex % 2 === 0 ? "home" : "away";
+
+      if (nextRound?.matches?.[nextMatchIndex]) {
+        nextRound.matches[nextMatchIndex][nextSide] = winner;
+      }
+    });
+  }
+}
+
 function renderPrediction() {
   const container = document.getElementById("predictionBracket");
   if (!container) return;
@@ -56,6 +164,7 @@ function renderPrediction() {
       ${predictionRounds.map((round, roundIndex) => `
         <div class="prediction-round">
           <h3>${round.name}</h3>
+
           ${round.matches.map((match, matchIndex) => `
             <div class="prediction-match">
               ${predictionTeamButton(match.home, roundIndex, matchIndex, "home", match.winner)}
@@ -101,6 +210,21 @@ function selectPredictionWinner(roundIndex, matchIndex, side) {
     nextRound.matches[nextMatchIndex][nextSide] = winner;
   }
 
+  for (let i = roundIndex + 1; i < predictionRounds.length - 1; i++) {
+    predictionRounds[i].matches.forEach((m, idx) => {
+      const autoWinner = pickWinner(m.home, m.away);
+      m.winner = autoWinner;
+
+      const nextRound = predictionRounds[i + 1];
+      const nextMatchIndex = Math.floor(idx / 2);
+      const nextSide = idx % 2 === 0 ? "home" : "away";
+
+      if (nextRound?.matches?.[nextMatchIndex]) {
+        nextRound.matches[nextMatchIndex][nextSide] = autoWinner;
+      }
+    });
+  }
+
   renderPrediction();
   updatePredictionPanel();
 }
@@ -119,10 +243,13 @@ function updatePredictionPanel() {
       : "Por definir";
   }
 
-  const candidates = predictionTeams.slice(0, 5).map((team, index) => ({
-    team,
-    odds: Math.max(12, 38 - index * 5)
-  }));
+  const candidates = [...predictionTeams]
+    .sort((a, b) => teamStrength(b) - teamStrength(a))
+    .slice(0, 5)
+    .map((team, index) => ({
+      team,
+      odds: Math.max(10, 38 - index * 5)
+    }));
 
   if (oddsContainer) {
     oddsContainer.innerHTML = candidates.map(item => `
@@ -140,8 +267,8 @@ function updatePredictionPanel() {
 
   if (analysis) {
     analysis.textContent = champion
-      ? `${teamName(champion)} aparece como campeón proyectado según tu llave personalizada.`
-      : "Selecciona ganadores ronda por ronda para construir tu pronóstico.";
+      ? `${teamName(champion)} aparece como campeón proyectado usando equipos ya presentes en llaves y clasificación actual.`
+      : "El pronóstico se genera con los equipos definidos por la API y la tabla de grupos.";
   }
 }
 
