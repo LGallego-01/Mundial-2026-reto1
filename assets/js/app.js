@@ -199,6 +199,7 @@ function loadData() {
   initApp();
 }
 
-initApp();
-
-setInterval(initApp, 60000);
+document.addEventListener("DOMContentLoaded", () => {
+  initApp();
+  setInterval(initApp, 60000);
+});
