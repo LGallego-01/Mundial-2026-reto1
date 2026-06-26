@@ -22,7 +22,7 @@ function renderDashboard(matches, teams) {
   setText("liveMatches", live);
   setText("totalTeams", teams.length);
 
-  const nextMatches = getNextMatches(matches, 4);
+  const nextMatches = getNextMatches(matches, 2);
 
   renderNextMatches(nextMatches);
   renderFeaturedMatches(matches);
