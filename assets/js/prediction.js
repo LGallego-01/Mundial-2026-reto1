@@ -8,9 +8,7 @@ let predictionRounds = [];
 
 function generatePrediction() {
   const matches = window.appState?.matches || [];
-
   const round32Matches = getRealKnockoutMatches(matches, "LAST_32");
-  console.log("Cruces reales pronóstico:", round32Matches);
 
   if (!round32Matches.length) {
     alert("Todavía no hay cruces reales suficientes para generar el pronóstico.");
@@ -36,11 +34,9 @@ function generatePrediction() {
   updatePredictionPanel();
 }
 
-
 function getRealKnockoutMatches(matches, stage) {
   const standings = window.appState?.standings || [];
   const candidates = getBestAvailableTeamsFromStandings(standings);
-
   const usedIds = new Set();
 
   return matches
@@ -63,11 +59,7 @@ function getRealKnockoutMatches(matches, stage) {
         if (away) usedIds.add(away.id);
       }
 
-      return {
-        home,
-        away,
-        winner: null
-      };
+      return { home, away, winner: null };
     })
     .filter(match => match.home && match.away);
 }
@@ -83,15 +75,13 @@ function getBestAvailableTeamsFromStandings(standings) {
     })
     .map(row => row.team);
 
-  const fromTeams = (window.appState?.teams || [])
-    .filter(team => team && team.id);
+  const fromTeams = (window.appState?.teams || []).filter(team => team && team.id);
 
   return mergeUniqueTeams(fromStandings, fromTeams);
 }
 
 function nextAvailableCandidate(candidates, usedIds) {
-  const team = candidates.find(team => team?.id && !usedIds.has(team.id));
-  return team || null;
+  return candidates.find(team => team?.id && !usedIds.has(team.id)) || null;
 }
 
 function isValidTeam(team) {
@@ -189,20 +179,20 @@ function selectPredictionWinner(roundIndex, matchIndex, side) {
     nextRound.matches[nextMatchIndex][nextSide] = winner;
   }
 
-  clearFollowingRounds(roundIndex + 1);
+  clearRoundsAfter(roundIndex + 1);
 
   renderPrediction();
   updatePredictionPanel();
 }
 
-function clearFollowingRounds(startRoundIndex) {
-  for (let i = startRoundIndex; i < predictionRounds.length; i++) {
+function clearRoundsAfter(roundIndex) {
+  for (let i = roundIndex; i < predictionRounds.length; i++) {
     predictionRounds[i].matches.forEach(match => {
       match.winner = null;
     });
   }
 
-  for (let i = startRoundIndex + 1; i < predictionRounds.length; i++) {
+  for (let i = roundIndex + 1; i < predictionRounds.length; i++) {
     predictionRounds[i].matches.forEach(match => {
       match.home = null;
       match.away = null;
@@ -225,22 +215,55 @@ function updatePredictionPanel() {
       : "Por definir";
   }
 
-  function getAlivePredictionTeams() {
+  if (oddsContainer) {
+    const aliveTeams = getAlivePredictionTeams();
+
+    const ranking = aliveTeams
+      .map(team => ({
+        team,
+        strength: teamStrength(team)
+      }))
+      .sort((a, b) => b.strength - a.strength)
+      .slice(0, 6);
+
+    const totalStrength = ranking.reduce((sum, item) => sum + item.strength, 0) || 1;
+
+    oddsContainer.innerHTML = ranking.map(item => {
+      const probability = Math.max(
+        5,
+        Math.round((item.strength / totalStrength) * 100)
+      );
+
+      return `
+        <div class="odds-item">
+          <div class="odds-row">
+            <span>${teamName(item.team)}</span>
+            <strong>${probability}%</strong>
+          </div>
+
+          <div class="odds-bar">
+            <span style="width:${probability}%"></span>
+          </div>
+        </div>
+      `;
+    }).join("");
+  }
+
+  if (analysis) {
+    analysis.textContent = champion
+      ? `${teamName(champion)} es tu campeón proyectado.`
+      : "Selecciona los ganadores de cada cruce real para construir tu llave.";
+  }
+}
+
+function getAlivePredictionTeams() {
   if (!predictionRounds.length) return [];
 
-  const selectedWinners = [];
+  const latestRoundWithWinners = [...predictionRounds]
+    .reverse()
+    .find(round => round.matches.some(match => match.winner));
 
-  predictionRounds.forEach(round => {
-    round.matches.forEach(match => {
-      if (match.winner) selectedWinners.push(match.winner);
-    });
-  });
-
-  if (selectedWinners.length) {
-    const latestRoundWithWinners = [...predictionRounds]
-      .reverse()
-      .find(round => round.matches.some(match => match.winner));
-
+  if (latestRoundWithWinners) {
     return mergeUniqueTeams(
       latestRoundWithWinners.matches
         .map(match => match.winner)
@@ -272,13 +295,6 @@ function teamStrength(team) {
   }
 
   return 30;
-}
-
-  if (analysis) {
-    analysis.textContent = champion
-      ? `${teamName(champion)} es tu campeón proyectado.`
-      : "Selecciona los ganadores de cada cruce real para construir tu llave.";
-  }
 }
 
 function resetPrediction() {
