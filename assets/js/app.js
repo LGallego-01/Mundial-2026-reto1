@@ -136,22 +136,40 @@ function findTeamGroup(teamId) {
   return null;
 }
 
-function getMatchStage(match){
+function getMatchStage(match) {
+  if (match.stage !== "GROUP_STAGE") {
+    return formatStage(match.stage);
+  }
 
-    if(match.stage !== "GROUP_STAGE"){
-        return formatStage(match.stage);
+  const homeId = match.homeTeam?.id;
+  const awayId = match.awayTeam?.id;
+
+  for (const group of window.appState.standings) {
+    const teams = group.table || [];
+
+    const homeInGroup = teams.some(row => row.team?.id === homeId);
+    const awayInGroup = teams.some(row => row.team?.id === awayId);
+
+    if (homeInGroup && awayInGroup) {
+      return formatGroupName(group.group);
     }
+  }
 
-    const homeGroup = findTeamGroup(match.homeTeam?.id);
-    const awayGroup = findTeamGroup(match.awayTeam?.id);
+  return getLanguage() === "es" ? "Fase de grupos" : "Group Stage";
+}
 
-    if(homeGroup && homeGroup === awayGroup){
-        return homeGroup.replace("GROUP_", "Grupo ");
-    }
+function formatGroupName(groupName) {
+  const value = String(groupName || "");
 
-    return getLanguage() === "es"
-        ? "Fase de grupos"
-        : "Group Stage";
+  const letter =
+    value.match(/[A-L]$/i)?.[0] ||
+    value.match(/GROUP_([A-L])/i)?.[1];
+
+  if (!letter) return value;
+
+  return getLanguage() === "es"
+    ? `Grupo ${letter.toUpperCase()}`
+    : `Group ${letter.toUpperCase()}`;
 }
 
 function renderGroups() {
