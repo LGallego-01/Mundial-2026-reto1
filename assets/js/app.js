@@ -45,7 +45,7 @@ function matchCard(match) {
 
   return `
     <article class="card">
-      <small class="match-group">${formatStage(match.stage)}</small>
+      <small class="match-group">${getMatchStage(match)}</small>
       <span class="pill">${statusLabel(statusOf(match))}</span>
       <h3>${teamName(match.homeTeam)} vs ${teamName(match.awayTeam)}</h3>
       <div class="score">${homeScore} - ${awayScore}</div>
@@ -59,6 +59,7 @@ function matchCardCompact(match) {
   return `
     <article class="card">
       <span class="pill">${statusLabel(statusOf(match))}</span>
+      <small class="match-group">${getMatchStage(match)}</small>
       <h3>${teamName(match.homeTeam)} vs ${teamName(match.awayTeam)}</h3>
       <p>${localTime(match.utcDate)}</p>
       <p class="muted">${smartMatchNote(match)}</p>
@@ -133,6 +134,24 @@ function findTeamGroup(teamId) {
     if (found) return group.group;
   }
   return null;
+}
+
+function getMatchStage(match){
+
+    if(match.stage !== "GROUP_STAGE"){
+        return formatStage(match.stage);
+    }
+
+    const homeGroup = findTeamGroup(match.homeTeam?.id);
+    const awayGroup = findTeamGroup(match.awayTeam?.id);
+
+    if(homeGroup && homeGroup === awayGroup){
+        return homeGroup.replace("GROUP_", "Grupo ");
+    }
+
+    return getLanguage() === "es"
+        ? "Fase de grupos"
+        : "Group Stage";
 }
 
 function renderGroups() {
