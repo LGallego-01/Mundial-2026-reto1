@@ -253,4 +253,27 @@ function applyStaticTranslations() {
 
   const searchButton = document.querySelector(".searchBox button");
   if (searchButton) searchButton.textContent = t("buscar");
+
+  
+  // -------- NUEVOS TITULOS --------
+
+  document.getElementById("countryTitle")?.textContent = t("consultaPais");
+  document.getElementById("countrySubtitle")?.textContent = t("consultaPaisDesc");
+
+  document.getElementById("groupsTitle")?.textContent = t("clasificacion");
+  document.getElementById("groupsSubtitle")?.textContent = t("clasificacionDesc");
+
+  document.getElementById("bracketTitle")?.textContent = t("eliminacion");
+  document.getElementById("bracketSubtitle")?.textContent = t("eliminacionDesc");
+
+  document.getElementById("predictionTitle")?.textContent = t("miPronostico");
+  document.getElementById("predictionSubtitle")?.textContent = t("pronosticoDesc");
+
+  document.getElementById("statsTitle")?.textContent = t("estadisticasTitulo");
+  document.getElementById("statsSubtitle")?.textContent = t("estadisticasDesc");
+
+  document.getElementById("guideTitle")?.textContent = t("guiaTitulo");
+  document.getElementById("guideSubtitle")?.textContent = t("guiaDesc");
+
 }
+
