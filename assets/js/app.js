@@ -181,7 +181,7 @@ function renderBracket() {
   if (!container) return;
 
   const knockoutMatches = window.appState.matches.filter(match => match.stage !== "GROUP_STAGE");
-
+  console.log(knockoutMatches);
   if (!knockoutMatches.length) {
     container.innerHTML = `
       <div class="round">
