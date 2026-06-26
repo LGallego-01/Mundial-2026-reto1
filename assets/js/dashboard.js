@@ -22,36 +22,63 @@ function renderDashboard(matches, teams) {
   setText("liveMatches", live);
   setText("totalTeams", teams.length);
 
-  const nextMatches = getNextMatches(matches, 3);
+  const nextMatches = getNextMatches(matches, 4);
 
   renderNextMatches(nextMatches);
   renderFeaturedMatches(matches);
 }
 
 function renderNextMatches(nextMatches) {
-  const nextMatch = document.getElementById("nextMatch");
 
-  if (!nextMatch) return;
+  const nextMatch = document.getElementById("nextMatch");
+  const todayMatches = document.getElementById("todayMatches");
+
+  if (!nextMatch || !todayMatches) return;
 
   if (!nextMatches.length) {
-    nextMatch.innerHTML = getLanguage() === "es"
-      ? "No hay próximos partidos"
-      : "No upcoming matches";
+
+    nextMatch.textContent =
+      getLanguage() === "es"
+        ? "No hay próximos partidos"
+        : "No upcoming matches";
+
+    todayMatches.innerHTML = "";
 
     setText("countdown", "--:--:--");
+
     return;
   }
 
-  nextMatch.innerHTML = nextMatches.map(match => `
-    <div class="next-match-line">
-      <strong>${teamName(match.homeTeam)}</strong>
-      <span>vs</span>
-      <strong>${teamName(match.awayTeam)}</strong>
-      <small>${localTime(match.utcDate)}</small>
-    </div>
+  // Partido principal
+  nextMatch.innerHTML = `
+      <strong>${teamName(nextMatches[0].homeTeam)}</strong>
+      <span style="opacity:.7;"> vs </span>
+      <strong>${teamName(nextMatches[0].awayTeam)}</strong>
+  `;
+
+  // Tarjetas inferiores
+  todayMatches.innerHTML = nextMatches.map(match => `
+
+      <div class="today-match">
+
+          <strong>${teamName(match.homeTeam)}</strong>
+
+          <div style="margin:8px 0;color:#bfe7ff;">
+              VS
+          </div>
+
+          <strong>${teamName(match.awayTeam)}</strong>
+
+          <div style="margin-top:12px;font-size:.9rem;opacity:.85;">
+              ${localTime(match.utcDate)}
+          </div>
+
+      </div>
+
   `).join("");
 
   startCountdown(nextMatches[0].utcDate);
+
 }
 
 function startCountdown(dateValue) {
