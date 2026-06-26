@@ -384,3 +384,35 @@ tr:hover{
     text-align:center;
 
 }
+
+
+/* ==========================
+   MODO OSCURO
+========================== */
+
+body.dark .card,
+body.dark .panel-card,
+body.dark .prediction-panel,
+body.dark .stats-grid article,
+body.dark .guide-grid article,
+body.dark .kpi-grid article,
+body.dark .round {
+  background: var(--surface);
+  color: var(--text);
+}
+
+body.dark select,
+body.dark input,
+body.dark .filters button {
+  background: var(--surface);
+  color: var(--text);
+  border-color: var(--border);
+}
+
+body.dark th {
+  background: var(--surface-soft);
+}
+
+body.dark tr:hover {
+  background: var(--surface-soft);
+}
