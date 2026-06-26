@@ -10,7 +10,7 @@ window.appState = {
 };
 
 async function initApp() {
-  setText("smartNote", "Actualizando datos del Mundial...");
+  setText("smartNote", t("actualizando"));
 
   const data = await loadTournament();
 
@@ -18,7 +18,7 @@ async function initApp() {
   window.appState.teams = data.teams || [];
   window.appState.standings = data.standings || [];
 
-  setText("smartNote", "Datos actualizados correctamente con horario local automático.");
+  setText("smartNote", t("actualizado"));
 
   renderDashboard(window.appState.matches, window.appState.teams);
   renderMatches("all");
@@ -36,7 +36,7 @@ function renderMatches(filter = "all") {
   });
 
   container.innerHTML = list.map(matchCard).join("") ||
-    `<p class="muted">No hay partidos para este filtro.</p>`;
+    `<p class="muted">${t("noPartidosFiltro")}</p>`;
 }
 
 function matchCard(match) {
@@ -98,10 +98,10 @@ function searchCountry() {
 
   if (!team) {
     result.innerHTML = `
-      <article class="card">
-        <h3>País no participante</h3>
-        <p>“${input}” no aparece entre las selecciones registradas para el Mundial 2026.</p>
-      </article>
+     <article class="card">
+       <h3>${t("paisNoParticipante")}</h3>
+       <p>“${input}” ${t("paisNoParticipanteDesc")}</p>
+     </article>
     `;
     return;
   }
@@ -118,9 +118,9 @@ function searchCountry() {
         <img src="${team.crest || ""}" alt="${teamName(team)}" class="country-flag">
         ${teamName(team)}
       </h3>
-      <p><b>Código:</b> ${team.tla}</p>
-      <p><b>Grupo:</b> ${group || "Por definir"}</p>
-      <p><b>Partidos encontrados:</b> ${matches.length}</p>
+      <p><b>${t("codigo")}:</b> ${team.tla}</p>
+      <p><b>${t("grupo")}:</b> ${group || t("porDefinir")}</p>
+      <p><b>${t("partidosEncontrados")}:</b> ${matches.length}</p>
     </article>
     ${matches.map(matchCardCompact).join("")}
   `;
@@ -144,9 +144,9 @@ function renderGroups() {
       <table>
         <tr>
           <th>#</th>
-          <th>Equipo</th>
+          <th>${t("equipo")}</th>
           <th>Pts</th>
-          <th>DG</th>
+          <th>${t("dg")}</th>
         </tr>
         ${group.table.map(row => `
           <tr>
