@@ -10,23 +10,31 @@ function generatePrediction() {
   const matches = window.appState?.matches || [];
   const standings = window.appState?.standings || [];
 
-  const realKnockoutTeams = getTeamsFromKnockout(matches);
-  const projectedTeams = getTeamsFromStandings(standings);
+  const realKnockoutMatches = getRealKnockoutMatches(matches);
+const projectedTeams = getTeamsFromStandings(standings);
 
-  predictionTeams = mergeUniqueTeams(realKnockoutTeams, projectedTeams).slice(0, 32);
+predictionTeams = mergeUniqueTeams(
+  realKnockoutMatches.flatMap(match => [match.home, match.away]).filter(Boolean),
+  projectedTeams
+).slice(0, 32);
 
-  if (!predictionTeams.length) {
-    alert("No hay datos suficientes para generar el pronóstico.");
-    return;
-  }
+if (!realKnockoutMatches.length && !predictionTeams.length) {
+  alert("No hay datos suficientes para generar el pronóstico.");
+  return;
+}
 
-  predictionRounds = [
-    buildRound("Ronda de 32", predictionTeams),
-    buildEmptyRound("Octavos", 16),
-    buildEmptyRound("Cuartos", 8),
-    buildEmptyRound("Semifinal", 4),
-    buildEmptyRound("Final", 2)
-  ];
+predictionRounds = [
+  {
+    name: getLanguage() === "es" ? "Ronda de 32" : "Round of 32",
+    matches: realKnockoutMatches.length
+      ? realKnockoutMatches
+      : buildRound("Ronda de 32", predictionTeams).matches
+  },
+  buildEmptyRound(getLanguage() === "es" ? "Octavos" : "Round of 16", 16),
+  buildEmptyRound(getLanguage() === "es" ? "Cuartos" : "Quarter-finals", 8),
+  buildEmptyRound(getLanguage() === "es" ? "Semifinal" : "Semi-finals", 4),
+  buildEmptyRound(getLanguage() === "es" ? "Final" : "Final", 2)
+];
 
   autoAdvanceByStrength();
 
@@ -288,4 +296,14 @@ function resetPrediction() {
   if (champion) champion.textContent = "Por definir";
   if (odds) odds.innerHTML = "";
   if (analysis) analysis.textContent = "El análisis se generará según tu pronóstico.";
+}
+function getRealKnockoutMatches(matches) {
+  return matches
+    .filter(match => match.stage === "LAST_32")
+    .map(match => ({
+      home: isValidTeam(match.homeTeam) ? match.homeTeam : null,
+      away: isValidTeam(match.awayTeam) ? match.awayTeam : null,
+      winner: null
+    }))
+    .filter(match => match.home || match.away);
 }
