@@ -196,6 +196,11 @@ function changeLanguage() {
   renderGroups();
   renderBracket();
   renderStats(window.appState.matches, window.appState.teams);
+
+  if (predictionRounds?.length) {
+    renderPrediction();
+    updatePredictionPanel();
+  }
 }
 
 function loadData() {
