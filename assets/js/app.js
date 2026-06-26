@@ -176,115 +176,67 @@ function renderGroups() {
     </article>
   `).join("");
 }
+
 function renderBracket() {
-
   const container = document.getElementById("bracket");
-
   if (!container) return;
 
   const knockoutMatches = window.appState.matches.filter(
     match => match.stage !== "GROUP_STAGE"
   );
 
-  if (!knockoutMatches.length) {
+  const stages = [
+    ["LAST_32", getLanguage() === "es" ? "🏆 Ronda de 32" : "🏆 Round of 32"],
+    ["LAST_16", getLanguage() === "es" ? "⚽ Octavos de final" : "⚽ Round of 16"],
+    ["QUARTER_FINALS", getLanguage() === "es" ? "🥇 Cuartos de final" : "🥇 Quarter-finals"],
+    ["SEMI_FINALS", getLanguage() === "es" ? "🔥 Semifinales" : "🔥 Semi-finals"],
+    ["THIRD_PLACE", getLanguage() === "es" ? "🥉 Tercer puesto" : "🥉 Third place"],
+    ["FINAL", getLanguage() === "es" ? "🏆 Final" : "🏆 Final"]
+  ];
 
+  if (!knockoutMatches.length) {
     container.innerHTML = `
       <div class="bracket-empty">
         <h3>🏆 Llaves oficiales</h3>
         <p>Las llaves aparecerán cuando finalice la fase de grupos.</p>
       </div>
     `;
-
     return;
-
   }
 
-  const stages = [
-    {
-      key: "LAST_32",
-      title: getLanguage() === "es" ? "🏆 Ronda de 32" : "🏆 Round of 32"
-    },
-    {
-      key: "LAST_16",
-      title: getLanguage() === "es" ? "⚽ Octavos de final" : "⚽ Round of 16"
-    },
-    {
-      key: "QUARTER_FINALS",
-      title: getLanguage() === "es" ? "🥇 Cuartos de final" : "🥇 Quarter-finals"
-    },
-    {
-      key: "SEMI_FINALS",
-      title: getLanguage() === "es" ? "🔥 Semifinales" : "🔥 Semi-finals"
-    },
-    {
-      key: "THIRD_PLACE",
-      title: getLanguage() === "es" ? "🥉 Tercer puesto" : "🥉 Third place"
-    },
-    {
-      key: "FINAL",
-      title: getLanguage() === "es" ? "🏆 Final" : "🏆 Final"
-    }
-  ];
-
-  container.innerHTML = stages.map(stage => {
-
-    const matches = knockoutMatches.filter(
-      m => m.stage === stage.key
-    );
+  container.innerHTML = stages.map(([stageKey, title]) => {
+    const matches = knockoutMatches.filter(match => match.stage === stageKey);
 
     if (!matches.length) return "";
 
     return `
-
       <section class="bracket-stage-section">
-
-        <h2 class="bracket-stage-title">
-          ${stage.title}
-        </h2>
+        <h2 class="bracket-stage-title">${title}</h2>
 
         <div class="bracket-grid-pro">
-
           ${matches.map(match => `
-
             <article class="bracket-match-card">
-
               <div class="bracket-team">
-
                 <strong>${teamName(match.homeTeam)}</strong>
-
               </div>
 
-              <div class="bracket-vs">
-
-                VS
-
-              </div>
+              <div class="bracket-vs">VS</div>
 
               <div class="bracket-team">
-
                 <strong>${teamName(match.awayTeam)}</strong>
-
               </div>
 
               <div class="bracket-date">
-
                 ${localTime(match.utcDate)}
-
               </div>
-
             </article>
-
           `).join("")}
-
         </div>
-
       </section>
-
     `;
-
   }).join("");
-
 }
+
 function changeLanguage() {
   const language = document.getElementById("languageSelect")?.value || "es";
 
