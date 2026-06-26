@@ -139,34 +139,43 @@ function renderGroups() {
   if (!container) return;
 
   container.innerHTML = window.appState.standings.map(group => `
-    <article class="card group-card">
+    <article class="card group-table-card">
       <h3>${group.group}</h3>
 
-      <div class="group-standings">
-        ${group.table.map(row => `
-          <div class="team-standing">
-            <div class="team-main">
-              <span class="team-position">${row.position}</span>
-              <strong>${teamName(row.team)}</strong>
-              <b>${row.points ?? 0} pts</b>
-            </div>
+      <div class="table-wrap">
+        <table class="group-table">
+          <tr>
+            <th>#</th>
+            <th>${t("equipo")}</th>
+            <th>PJ</th>
+            <th>G</th>
+            <th>E</th>
+            <th>P</th>
+            <th>GF</th>
+            <th>GC</th>
+            <th>${t("dg")}</th>
+            <th>Pts</th>
+          </tr>
 
-            <div class="team-stats">
-              <span>PJ ${row.playedGames ?? 0}</span>
-              <span>G ${row.won ?? 0}</span>
-              <span>E ${row.draw ?? 0}</span>
-              <span>P ${row.lost ?? 0}</span>
-              <span>GF ${row.goalsFor ?? 0}</span>
-              <span>GC ${row.goalsAgainst ?? 0}</span>
-              <span>DG ${row.goalDifference ?? 0}</span>
-            </div>
-          </div>
-        `).join("")}
+          ${group.table.map(row => `
+            <tr>
+              <td>${row.position}</td>
+              <td>${teamName(row.team)}</td>
+              <td>${row.playedGames ?? 0}</td>
+              <td>${row.won ?? 0}</td>
+              <td>${row.draw ?? 0}</td>
+              <td>${row.lost ?? 0}</td>
+              <td>${row.goalsFor ?? 0}</td>
+              <td>${row.goalsAgainst ?? 0}</td>
+              <td>${row.goalDifference ?? 0}</td>
+              <td><b>${row.points ?? 0}</b></td>
+            </tr>
+          `).join("")}
+        </table>
       </div>
     </article>
   `).join("");
 }
-
 function renderBracket() {
   const container = document.getElementById("bracket");
   if (!container) return;
