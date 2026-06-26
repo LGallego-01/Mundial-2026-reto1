@@ -1,1 +1,33 @@
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
 
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    box-shadow: 0 0 0 rgba(11, 92, 255, 0);
+  }
+
+  50% {
+    box-shadow: 0 0 30px rgba(11, 92, 255, 0.28);
+  }
+}
+
+.card,
+.kpi-grid article,
+.panel-card,
+.prediction-panel,
+.bracket-board {
+  animation: fadeUp 0.35s ease both;
+}
+
+.champion-box {
+  animation: pulseGlow 2.2s infinite;
+}
