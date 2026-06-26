@@ -10,6 +10,7 @@ function generatePrediction() {
   const matches = window.appState?.matches || [];
 
   const round32Matches = getRealKnockoutMatches(matches, "LAST_32");
+  console.log("Cruces reales pronóstico:", round32Matches);
 
   if (!round32Matches.length) {
     alert("Todavía no hay cruces reales suficientes para generar el pronóstico.");
@@ -37,7 +38,8 @@ function generatePrediction() {
 
 function getRealKnockoutMatches(matches, stage) {
   return matches
-    .filter(match => match.stage === stage)
+    .filter(match => String(match.stage || "").toUpperCase() === stage)
+    .sort((a, b) => new Date(a.utcDate) - new Date(b.utcDate))
     .map(match => ({
       home: isValidTeam(match.homeTeam) ? match.homeTeam : null,
       away: isValidTeam(match.awayTeam) ? match.awayTeam : null,
