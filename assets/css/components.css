@@ -417,18 +417,23 @@ body.dark tr:hover {
   background: var(--surface-soft);
 }
 
-.country-title {
-  display: flex;
-  align-items: center;
-  gap: 12px;
+.country-title{
+    display:flex;
+    align-items:center;
+    justify-content:flex-start;
+    gap:10px;
+    margin:0 0 14px 0;
+    font-size:1.55rem;
+    font-weight:800;
 }
 
-.country-flag {
-  width: 42px;
-  height: 42px;
-  object-fit: contain;
-  border-radius: 50%;
-  background: #f4f8fb;
-  border: 1px solid var(--border);
-  padding: 4px;
+.country-flag{
+    width:26px;
+    height:26px;
+    object-fit:contain;
+    flex-shrink:0;
+    border-radius:4px;
+    border:none;
+    background:transparent;
+    padding:0;
 }
