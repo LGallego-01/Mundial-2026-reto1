@@ -141,19 +141,33 @@ function renderGroups() {
   container.innerHTML = window.appState.standings.map(group => `
     <article class="card">
       <h3>${group.group}</h3>
+
       <table>
         <tr>
           <th>#</th>
           <th>${t("equipo")}</th>
-          <th>Pts</th>
+          <th>PJ</th>
+          <th>G</th>
+          <th>E</th>
+          <th>P</th>
+          <th>GF</th>
+          <th>GC</th>
           <th>${t("dg")}</th>
+          <th>Pts</th>
         </tr>
+
         ${group.table.map(row => `
           <tr>
             <td>${row.position}</td>
             <td>${teamName(row.team)}</td>
-            <td>${row.points}</td>
-            <td>${row.goalDifference}</td>
+            <td>${row.playedGames ?? 0}</td>
+            <td>${row.won ?? 0}</td>
+            <td>${row.draw ?? 0}</td>
+            <td>${row.lost ?? 0}</td>
+            <td>${row.goalsFor ?? 0}</td>
+            <td>${row.goalsAgainst ?? 0}</td>
+            <td>${row.goalDifference ?? 0}</td>
+            <td><b>${row.points ?? 0}</b></td>
           </tr>
         `).join("")}
       </table>
