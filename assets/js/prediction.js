@@ -36,7 +36,7 @@ predictionRounds = [
   buildEmptyRound(getLanguage() === "es" ? "Final" : "Final", 2)
 ];
 
-  autoAdvanceByStrength();
+  //autoAdvanceByStrength();
 
   renderPrediction();
   updatePredictionPanel();
@@ -218,20 +218,7 @@ function selectPredictionWinner(roundIndex, matchIndex, side) {
     nextRound.matches[nextMatchIndex][nextSide] = winner;
   }
 
-  for (let i = roundIndex + 1; i < predictionRounds.length - 1; i++) {
-    predictionRounds[i].matches.forEach((m, idx) => {
-      const autoWinner = pickWinner(m.home, m.away);
-      m.winner = autoWinner;
-
-      const nextRound = predictionRounds[i + 1];
-      const nextMatchIndex = Math.floor(idx / 2);
-      const nextSide = idx % 2 === 0 ? "home" : "away";
-
-      if (nextRound?.matches?.[nextMatchIndex]) {
-        nextRound.matches[nextMatchIndex][nextSide] = autoWinner;
-      }
-    });
-  }
+  // No avanzar automáticamente: el usuario escoge cada ganador.
 
   renderPrediction();
   updatePredictionPanel();
