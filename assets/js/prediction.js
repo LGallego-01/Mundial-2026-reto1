@@ -36,16 +36,56 @@ function generatePrediction() {
   updatePredictionPanel();
 }
 
+
 function getRealKnockoutMatches(matches, stage) {
+  const standings = window.appState?.standings || [];
+  const candidates = getBestAvailableTeamsFromStandings(standings);
+
+  const usedIds = new Set();
+
   return matches
     .filter(match => String(match.stage || "").toUpperCase() === stage)
     .sort((a, b) => new Date(a.utcDate) - new Date(b.utcDate))
-    .map(match => ({
-      home: isValidTeam(match.homeTeam) ? match.homeTeam : null,
-      away: isValidTeam(match.awayTeam) ? match.awayTeam : null,
-      winner: null
-    }))
+    .map(match => {
+      let home = isValidTeam(match.homeTeam) ? match.homeTeam : null;
+      let away = isValidTeam(match.awayTeam) ? match.awayTeam : null;
+
+      if (home) usedIds.add(home.id);
+      if (away) usedIds.add(away.id);
+
+      if (!home) {
+        home = nextAvailableCandidate(candidates, usedIds);
+        if (home) usedIds.add(home.id);
+      }
+
+      if (!away) {
+        away = nextAvailableCandidate(candidates, usedIds);
+        if (away) usedIds.add(away.id);
+      }
+
+      return {
+        home,
+        away,
+        winner: null
+      };
+    })
     .filter(match => match.home || match.away);
+}
+
+function getBestAvailableTeamsFromStandings(standings) {
+  return standings
+    .flatMap(group => group.table || [])
+    .filter(row => isValidTeam(row.team))
+    .sort((a, b) => {
+      if ((b.points ?? 0) !== (a.points ?? 0)) return (b.points ?? 0) - (a.points ?? 0);
+      if ((b.goalDifference ?? 0) !== (a.goalDifference ?? 0)) return (b.goalDifference ?? 0) - (a.goalDifference ?? 0);
+      return (b.goalsFor ?? 0) - (a.goalsFor ?? 0);
+    })
+    .map(row => row.team);
+}
+
+function nextAvailableCandidate(candidates, usedIds) {
+  return candidates.find(team => !usedIds.has(team.id)) || null;
 }
 
 function isValidTeam(team) {
