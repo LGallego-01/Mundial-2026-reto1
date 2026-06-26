@@ -225,50 +225,53 @@ function updatePredictionPanel() {
       : "Por definir";
   }
 
-  if (oddsContainer) {
+  function getAlivePredictionTeams() {
+  if (!predictionRounds.length) return [];
 
-  const standings = window.appState.standings || [];
+  const selectedWinners = [];
 
-  const ranking = standings
-    .flatMap(group => group.table)
-    .sort((a,b)=>{
+  predictionRounds.forEach(round => {
+    round.matches.forEach(match => {
+      if (match.winner) selectedWinners.push(match.winner);
+    });
+  });
 
-      if (b.points !== a.points)
-        return b.points-a.points;
+  if (selectedWinners.length) {
+    const latestRoundWithWinners = [...predictionRounds]
+      .reverse()
+      .find(round => round.matches.some(match => match.winner));
 
-      if (b.goalDifference !== a.goalDifference)
-        return b.goalDifference-a.goalDifference;
+    return mergeUniqueTeams(
+      latestRoundWithWinners.matches
+        .map(match => match.winner)
+        .filter(Boolean)
+    );
+  }
 
-      return b.goalsFor-a.goalsFor;
+  return mergeUniqueTeams(
+    predictionRounds[0].matches
+      .flatMap(match => [match.home, match.away])
+      .filter(Boolean)
+  );
+}
 
-    })
-    .slice(0,5);
+function teamStrength(team) {
+  const standings = window.appState?.standings || [];
 
-  const maxPoints = ranking[0]?.points || 1;
+  for (const group of standings) {
+    const row = group.table?.find(item => item.team.id === team?.id);
 
-  oddsContainer.innerHTML = ranking.map(team=>{
-
-      const probability = Math.round(
-        (team.points/maxPoints)*100
+    if (row) {
+      return (
+        ((row.points ?? 0) * 50) +
+        ((row.goalDifference ?? 0) * 15) +
+        ((row.goalsFor ?? 0) * 8) +
+        ((row.won ?? 0) * 20)
       );
+    }
+  }
 
-      return `
-        <div class="odds-item">
-
-            <div class="odds-row">
-                <span>${teamName(team.team)}</span>
-                <strong>${probability}%</strong>
-            </div>
-
-            <div class="odds-bar">
-                <span style="width:${probability}%"></span>
-            </div>
-
-        </div>
-      `;
-
-  }).join("");
-
+  return 30;
 }
 
   if (analysis) {
