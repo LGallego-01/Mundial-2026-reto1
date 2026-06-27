@@ -353,6 +353,36 @@ function applyStaticTranslations() {
 
    const predictionEmptyText = document.getElementById("predictionEmptyText");
    if (predictionEmptyText) predictionEmptyText.textContent = t("textoPronosticoVacio");
+
+   const guideWinTitle = document.getElementById("guideWinTitle");
+   if (guideWinTitle) guideWinTitle.textContent = t("victoria");
+
+   const guideWinDesc = document.getElementById("guideWinDesc");
+   if (guideWinDesc) guideWinDesc.textContent = t("victoriaDesc");
+
+   const guideDrawTitle = document.getElementById("guideDrawTitle");
+   if (guideDrawTitle) guideDrawTitle.textContent = t("empate");
+
+   const guideDrawDesc = document.getElementById("guideDrawDesc");
+   if (guideDrawDesc) guideDrawDesc.textContent = t("empateDesc");
+
+   const guideLoseTitle = document.getElementById("guideLoseTitle");
+   if (guideLoseTitle) guideLoseTitle.textContent = t("derrota");
+
+   const guideLoseDesc = document.getElementById("guideLoseDesc");
+   if (guideLoseDesc) guideLoseDesc.textContent = t("derrotaDesc");
+
+   const guideGoalTitle = document.getElementById("guideGoalTitle");
+   if (guideGoalTitle) guideGoalTitle.textContent = t("diferenciaGol");
+
+   const guideGoalDesc = document.getElementById("guideGoalDesc");
+   if (guideGoalDesc) guideGoalDesc.textContent = t("diferenciaGolDesc");
+
+   const guideBracketTitle = document.getElementById("guideBracketTitle");
+   if (guideBracketTitle) guideBracketTitle.textContent = t("llaves");
+
+   const guideBracketDesc = document.getElementById("guideBracketDesc");
+   if (guideBracketDesc) guideBracketDesc.textContent = t("llaveDesc");
    
  
 }
