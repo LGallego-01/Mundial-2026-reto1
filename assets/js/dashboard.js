@@ -61,15 +61,15 @@ function renderNextMatches(nextMatches) {
 
       <div class="today-match">
 
-          <strong>${teamName(match.homeTeam)}</strong>
+          <strong class="today-team-name">${teamName(match.homeTeam)}</strong>
 
-          <div style="margin:8px 0;color:#bfe7ff;">
+          <div class="today-vs">
               VS
           </div>
 
-          <strong>${teamName(match.awayTeam)}</strong>
+          <strong class="today-team-name">${teamName(match.awayTeam)}</strong>
 
-          <div style="margin-top:12px;font-size:.9rem;opacity:.85;">
+          <div class="today-time">
               ${localTime(match.utcDate)}
           </div>
 
