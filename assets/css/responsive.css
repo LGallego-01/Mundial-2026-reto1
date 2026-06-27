@@ -81,10 +81,23 @@
   .groups,
   .stats-grid,
   .guide-grid,
-  .matches-grid,
-  .featured-matches,
-  .today-matches {
-  grid-template-columns: 1fr;
+  .today-matches,
+  .match-list {
+    grid-template-columns: 1fr !important;
+  }
+
+  .today-matches,
+  .match-list {
+    display: grid !important;
+    width: 100%;
+  }
+
+  .match-card,
+  .match-list article,
+  .today-matches article {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
   }
 
   .group-table {
@@ -134,15 +147,18 @@
     padding: 20px;
   }
 
-   .matches-grid,
-   .featured-matches,
-   .today-matches {
-     grid-template-columns: 1fr;
-   }
+  .today-matches,
+  .match-list,
+  .grid {
+    grid-template-columns: 1fr !important;
+  }
 
-   .match-card {
+  .match-card,
+  .card,
+  .today-matches article,
+  .match-list article {
     width: 100%;
     max-width: 100%;
     min-width: 0;
-    }
+  }
 }
