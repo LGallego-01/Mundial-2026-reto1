@@ -99,12 +99,13 @@
         </div>
 
         <div class="filters">
-          <button onclick="renderMatches('all')">Todos</button>
-          <button onclick="renderMatches('next')">Próximos</button>
-          <button onclick="renderMatches('live')">En vivo</button>
-          <button onclick="renderMatches('finished')">Finalizados</button>
+           <button id="filterAll" onclick="renderMatches('all')">Todos</button>
+           <button id="filterNext" onclick="renderMatches('next')">Próximos</button>
+           <button id="filterLive" onclick="renderMatches('live')">En vivo</button>
+           <button id="filterFinished" onclick="renderMatches('finished')">Finalizados</button>
         </div>
 
+        
         <div id="matchesGrid" class="grid"></div>
       </section>
 
