@@ -264,6 +264,8 @@ function applyStaticTranslations() {
   const searchButton = document.querySelector(".searchBox button");
   if (searchButton) searchButton.textContent = t("buscar");
 
+   
+
   
   // -------- NUEVOS TITULOS --------
 
@@ -302,6 +304,24 @@ function applyStaticTranslations() {
 
   const guideSubtitle = document.getElementById("guideSubtitle");
   if (guideSubtitle) guideSubtitle.textContent = t("guiaDesc");
+
+   const calendarTitle = document.getElementById("calendarTitle");
+   if (calendarTitle) calendarTitle.textContent = t("calendario");
+
+   const calendarSubtitle = document.getElementById("calendarSubtitle");
+   if (calendarSubtitle) calendarSubtitle.textContent = t("calendarioDesc");
+
+   const filterAll = document.getElementById("filterAll");
+   if (filterAll) filterAll.textContent = t("todos");
+
+   const filterNext = document.getElementById("filterNext");
+   if (filterNext) filterNext.textContent = t("proximos");
+
+   const filterLive = document.getElementById("filterLive");
+   if (filterLive) filterLive.textContent = t("enVivo");
+
+   const filterFinished = document.getElementById("filterFinished");
+   if (filterFinished) filterFinished.textContent = t("finalizados");
    
  
 }
