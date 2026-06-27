@@ -157,23 +157,23 @@
         </div>
 
         <div class="prediction-toolbar">
-          <button onclick="generatePrediction()">Generar pronóstico automático</button>
-          <button onclick="resetPrediction()">Reiniciar pronóstico</button>
+          <button id="btnGeneratePrediction" onclick="generatePrediction()">Generar pronóstico automático</button>
+          <button id="btnResetPrediction" onclick="resetPrediction()">Reiniciar pronóstico</button>
         </div>
 
         <div class="prediction-layout">
           <div class="bracket-board" id="predictionBracket">
-            <p class="muted">Haz clic en “Generar pronóstico automático” para crear tu llave.</p>
+            <p id="predictionEmptyText" class="muted">Haz clic en “Generar pronóstico automático” para crear tu llave.</p>
           </div>
 
           <aside class="prediction-panel">
-            <h3>Campeón proyectado</h3>
+            <h3 id="championTitle">Campeón proyectado</h3>
             <div id="predictedChampion" class="champion-box">Por definir</div>
 
-            <h3>Probabilidades</h3>
+            <h3 id="oddsTitle">Probabilidades</h3>
             <div id="championOdds" class="odds-list"></div>
 
-            <h3>Análisis inteligente</h3>
+            <h3 id="analysisTitle">Análisis inteligente</h3>
             <p id="predictionAnalysis">El análisis se generará según tu pronóstico.</p>
           </aside>
         </div>
