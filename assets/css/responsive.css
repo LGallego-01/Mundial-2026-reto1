@@ -162,3 +162,68 @@
     min-width: 0;
   }
 }
+
+/* ======================================================
+   FIX PARTIDOS EN CELULAR
+====================================================== */
+
+@media (max-width: 768px) {
+  .today-matches,
+  .match-list,
+  .grid {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 14px;
+    width: 100%;
+  }
+
+  .today-match,
+  .match-card,
+  .card {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+  }
+
+  .match-card {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 14px;
+  }
+
+  .team {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .score {
+    text-align: center;
+    width: 100%;
+  }
+
+  .hero-card {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+@media (max-width: 520px) {
+  .hero-card {
+    padding: 20px;
+  }
+
+  .today-match,
+  .match-card,
+  .card {
+    padding: 16px;
+  }
+
+  .team img {
+    width: 34px;
+    height: 34px;
+  }
+
+  .score {
+    font-size: 2rem;
+  }
+}
