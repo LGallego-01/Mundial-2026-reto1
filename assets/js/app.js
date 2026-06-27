@@ -159,19 +159,22 @@ function getMatchStage(match) {
 }
 
 function formatGroupName(groupName) {
-  const value = String(groupName || "").toUpperCase().trim();
 
-  const match = value.match(/[A-L]$/);
+    const value = String(groupName || "").toUpperCase();
 
-  if (!match) {
+    let letter = "";
+
+    if (value.startsWith("GROUP_")) {
+        letter = value.substring(6);   // GROUP_A → A
+    } else if (value.startsWith("GROUP ")) {
+        letter = value.substring(6);   // GROUP A → A
+    } else {
+        letter = value;
+    }
+
     return getLanguage() === "es"
-      ? "Fase de grupos"
-      : "Group Stage";
-  }
-
-  return getLanguage() === "es"
-    ? `Grupo ${match[0]}`
-    : `Group ${match[0]}`;
+        ? `Grupo ${letter}`
+        : `Group ${letter}`;
 }
 
 function renderGroups() {
