@@ -44,6 +44,12 @@ const dictionary = {
     pronosticoDesc: "Construye tu llave personalizada y descubre tu campeón proyectado.",
     generarPronostico: "Generar pronóstico automático",
     reiniciarPronostico: "Reiniciar pronóstico",
+    btnGenerarPronostico: "Generar pronóstico automático",
+    btnReiniciarPronostico: "Reiniciar pronóstico",
+    campeonProyectado: "Campeón proyectado",
+    probabilidadesTitulo: "Probabilidades",
+    analisisInteligente: "Análisis inteligente",
+    textoPronosticoVacio: "Haz clic en “Generar pronóstico automático” para crear tu llave.",
     campeon: "Campeón proyectado",
     probabilidades: "Probabilidades",
     analisis: "Análisis inteligente",
@@ -71,6 +77,7 @@ const dictionary = {
     partidosEncontrados: "Partidos encontrados",
     equipo: "Equipo",
     dg: "DG"
+    
   },
 
   en: {
@@ -111,6 +118,12 @@ const dictionary = {
     pronosticoDesc: "Build your custom bracket and discover your projected champion.",
     generarPronostico: "Generate automatic prediction",
     reiniciarPronostico: "Reset prediction",
+    btnGenerarPronostico: "Generate automatic prediction",
+    btnReiniciarPronostico: "Reset prediction",
+    campeonProyectado: "Projected champion",
+    probabilidadesTitulo: "Probabilities",
+    analisisInteligente: "Smart analysis",
+    textoPronosticoVacio: "Click “Generate automatic prediction” to create your bracket.",
     campeon: "Projected champion",
     probabilidades: "Probabilities",
     analisis: "Smart analysis",
@@ -322,6 +335,24 @@ function applyStaticTranslations() {
 
    const filterFinished = document.getElementById("filterFinished");
    if (filterFinished) filterFinished.textContent = t("finalizados");
+
+   const btnGeneratePrediction = document.getElementById("btnGeneratePrediction");
+   if (btnGeneratePrediction) btnGeneratePrediction.textContent = t("btnGenerarPronostico");
+
+   const btnResetPrediction = document.getElementById("btnResetPrediction");
+   if (btnResetPrediction) btnResetPrediction.textContent = t("btnReiniciarPronostico");
+
+   const championTitle = document.getElementById("championTitle");
+   if (championTitle) championTitle.textContent = t("campeonProyectado");
+
+   const oddsTitle = document.getElementById("oddsTitle");
+   if (oddsTitle) oddsTitle.textContent = t("probabilidadesTitulo");
+
+   const analysisTitle = document.getElementById("analysisTitle");
+   if (analysisTitle) analysisTitle.textContent = t("analisisInteligente");
+
+   const predictionEmptyText = document.getElementById("predictionEmptyText");
+   if (predictionEmptyText) predictionEmptyText.textContent = t("textoPronosticoVacio");
    
  
 }
