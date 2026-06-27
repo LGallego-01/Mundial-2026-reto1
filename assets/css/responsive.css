@@ -80,8 +80,11 @@
   .grid,
   .groups,
   .stats-grid,
-  .guide-grid {
-    grid-template-columns: 1fr;
+  .guide-grid,
+  .matches-grid,
+  .featured-matches,
+  .today-matches {
+  grid-template-columns: 1fr;
   }
 
   .group-table {
@@ -130,4 +133,16 @@
   .hero-card {
     padding: 20px;
   }
+
+   .matches-grid,
+   .featured-matches,
+   .today-matches {
+     grid-template-columns: 1fr;
+   }
+
+   .match-card {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    }
 }
