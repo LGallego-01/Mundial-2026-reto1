@@ -159,21 +159,19 @@ function getMatchStage(match) {
 }
 
 function formatGroupName(groupName) {
+  const value = String(groupName || "").toUpperCase().trim();
 
-    const value = String(groupName || "").toUpperCase();
+  const match = value.match(/[A-L]$/);
 
-    // Extrae la letra del grupo (A, B, C...)
-    const letter = value.replace(/[^A-L]/g, "");
-
-    if (!letter) {
-        return getLanguage() === "es"
-            ? "Fase de grupos"
-            : "Group Stage";
-    }
-
+  if (!match) {
     return getLanguage() === "es"
-        ? `Grupo ${letter}`
-        : `Group ${letter}`;
+      ? "Fase de grupos"
+      : "Group Stage";
+  }
+
+  return getLanguage() === "es"
+    ? `Grupo ${match[0]}`
+    : `Group ${match[0]}`;
 }
 
 function renderGroups() {
@@ -182,7 +180,7 @@ function renderGroups() {
 
   container.innerHTML = window.appState.standings.map(group => `
     <article class="card group-table-card">
-      <h3>${group.group}</h3>
+      <h3>${formatGroupName(group.group)}</h3>
 
       <div class="table-wrap">
         <table class="group-table">
