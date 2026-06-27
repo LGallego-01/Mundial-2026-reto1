@@ -12,29 +12,34 @@ Consulta un endpoint del Worker
 */
 
 async function apiGet(endpoint) {
+  const url = `${API_URL}${endpoint}`;
+  const cacheKey = `cache_${endpoint}`;
 
-    try {
+  try {
+    const response = await fetch(url);
 
-        const response = await fetch(`${API_URL}${endpoint}`);
-
-        if (!response.ok) {
-
-            throw new Error("Error consultando " + endpoint);
-
-        }
-
-        return await response.json();
-
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}`);
     }
 
-    catch(error){
+    const data = await response.json();
 
-        console.error(error);
+    // Guarda última versión buena
+    localStorage.setItem(cacheKey, JSON.stringify(data));
 
-        return null;
+    return data;
 
+  } catch (error) {
+    console.warn("API caída, usando caché:", endpoint, error);
+
+    const cachedData = localStorage.getItem(cacheKey);
+
+    if (cachedData) {
+      return JSON.parse(cachedData);
     }
 
+    throw error;
+  }
 }
 
 /*
@@ -85,34 +90,27 @@ Carga completa
 ===========================================
 */
 
-async function loadTournament(){
-
-    const [
-
-        matches,
-
-        teams,
-
-        standings
-
-    ] = await Promise.all([
-
-        getMatches(),
-
-        getTeams(),
-
-        getStandings()
-
+async function loadTournament() {
+  try {
+    const [matches, teams, standings] = await Promise.all([
+      getMatches(),
+      getTeams(),
+      getStandings()
     ]);
 
     return {
-
-        matches,
-
-        teams,
-
-        standings
-
+      matches: matches || [],
+      teams: teams || [],
+      standings: standings || []
     };
 
+  } catch (error) {
+    console.error("No se pudo cargar torneo ni caché:", error);
+
+    return {
+      matches: [],
+      teams: [],
+      standings: []
+    };
+  }
 }
