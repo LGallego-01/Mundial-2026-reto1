@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>World Cup Vision 2026 | Analytics Center</title>
+  <link rel="stylesheet" href="assets/css/analytics.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+  <div class="analytics-app">
+
+    <header class="analytics-header pro-header">
+      <div class="brand">
+        <span class="brand-badge">MUNDIAL IT 2026 · RETO 2</span>
+        <h1>World Cup Vision</h1>
+        <p>Analytics Center · Advanced Football Intelligence</p>
+      </div>
+
+      <div class="header-control">
+        <span class="status-live">● Live Analytics</span>
+        <a href="index.html" class="back-link">← Volver al Reto 1</a>
+      </div>
+    </header>
+
+    <section class="mission-grid">
+      <article class="mission-main">
+        <span class="section-label">Executive Summary</span>
+        <h2>Centro avanzado de inteligencia deportiva para el Mundial FIFA 2026</h2>
+        <p id="executiveSummary">
+          El torneo presenta un alto nivel competitivo: Argentina lidera el índice ofensivo, Francia destaca por balance defensivo y España domina la posesión con menor conversión frente al arco.
+        </p>
+
+        <div class="summary-pills">
+          <span>⚽ Promedio goles: <strong>2.84</strong></span>
+          <span>🏆 Líder rendimiento: <strong>Argentina</strong></span>
+          <span>🛡 Mejor defensa: <strong>Francia</strong></span>
+        </div>
+      </article>
+
+      <article class="mission-score">
+        <span>Performance Score</span>
+        <strong id="globalScore">91</strong>
+        <small>Índice global del torneo</small>
+      </article>
+    </section>
+
+    <section class="kpi-grid pro-kpis">
+      <article class="kpi-card">
+        <span>⚽ Partidos</span>
+        <strong id="kpiMatches">64</strong>
+        <small>Calendario completo</small>
+      </article>
+
+      <article class="kpi-card">
+        <span>🥅 Goles</span>
+        <strong id="kpiGoals">182</strong>
+        <small>Producción ofensiva</small>
+      </article>
+
+      <article class="kpi-card">
+        <span>📈 Prom. goles</span>
+        <strong id="kpiAvgGoals">2.84</strong>
+        <small>Por partido</small>
+      </article>
+
+      <article class="kpi-card">
+        <span>🎯 Efectividad</span>
+        <strong id="kpiEfficiency">34%</strong>
+        <small>Conversión ofensiva</small>
+      </article>
+
+      <article class="kpi-card">
+        <span>🧠 Posesión</span>
+        <strong id="kpiPossession">53%</strong>
+        <small>Control promedio</small>
+      </article>
+    </section>
+
+    <section class="filters-panel">
+      <div>
+        <span class="section-label">Exploración inteligente</span>
+        <h3>Filtros analíticos</h3>
+      </div>
+
+      <div class="filters-grid">
+        <select id="filterTeam">
+          <option value="all">Todos los equipos</option>
+          <option value="Argentina">Argentina</option>
+          <option value="Brasil">Brasil</option>
+          <option value="España">España</option>
+          <option value="Francia">Francia</option>
+        </select>
+
+        <select id="filterGroup">
+          <option value="all">Todos los grupos</option>
+          <option value="A">Grupo A</option>
+          <option value="B">Grupo B</option>
+          <option value="C">Grupo C</option>
+          <option value="D">Grupo D</option>
+        </select>
+
+        <select id="filterPhase">
+          <option value="all">Todas las fases</option>
+          <option value="groups">Fase de grupos</option>
+          <option value="round16">Octavos</option>
+          <option value="quarter">Cuartos</option>
+          <option value="semi">Semifinal</option>
+          <option value="final">Final</option>
+        </select>
+
+        <button id="applyFilters">Aplicar análisis</button>
+      </div>
+    </section>
+
+    
+
+<main class="analytics-dashboard">
+
+  <section class="analytics-board">
+
+    <article class="panel chart-panel">
+      <div class="panel-header">
+        <div>
+          <span class="section-label">Advanced Analytics</span>
+          <h3>Goles por fase</h3>
+        </div>
+        <span class="panel-tag">Tendencia ofensiva</span>
+      </div>
+
+      <canvas id="goalsByPhaseChart"></canvas>
+
+      <p class="analysis-text">
+        La fase de grupos concentra el mayor volumen ofensivo, mientras que las rondas finales reflejan mayor control táctico y menor margen de error.
+      </p>
+    </article>
+
+    <article class="panel chart-panel">
+      <div class="panel-header">
+        <div>
+          <span class="section-label">Performance Index</span>
+          <h3>Radar de rendimiento</h3>
+        </div>
+        <span class="panel-tag">Score 360°</span>
+      </div>
+
+      <canvas id="performanceRadarChart"></canvas>
+    </article>
+
+    <article class="panel chart-panel">
+      <div class="panel-header">
+        <div>
+          <span class="section-label">Intelligence Matrix</span>
+          <h3>Ataque vs defensa</h3>
+        </div>
+        <span class="panel-tag">Cruce de variables</span>
+      </div>
+
+      <canvas id="attackDefenseChart"></canvas>
+
+      <p class="analysis-text">
+        Los equipos ubicados en la zona superior derecha combinan alto poder ofensivo con solidez defensiva.
+      </p>
+    </article>
+
+    <article class="panel ranking-panel">
+      <div class="panel-header">
+        <div>
+          <span class="section-label">Smart Ranking</span>
+          <h3>Ranking inteligente</h3>
+        </div>
+        <span class="panel-tag">Performance</span>
+      </div>
+
+      <div class="ranking-list" id="rankingList">
+        <div><span>1. Argentina</span><strong>91</strong></div>
+        <div><span>2. Francia</span><strong>88</strong></div>
+        <div><span>3. Brasil</span><strong>85</strong></div>
+        <div><span>4. España</span><strong>82</strong></div>
+        <div><span>5. Inglaterra</span><strong>79</strong></div>
+      </div>
+    </article>
+
+  </section>
+
+  <section class="decision-center">
+
+    <article class="panel comparator-panel">
+      <div class="panel-header">
+        <div>
+          <span class="section-label">Team Comparator</span>
+          <h3>Comparador inteligente</h3>
+        </div>
+      </div>
+
+      <div class="compare-selects">
+        <select id="teamA">
+          <option>Argentina</option>
+          <option>Brasil</option>
+          <option>España</option>
+          <option>Francia</option>
+        </select>
+
+        <span>VS</span>
+
+        <select id="teamB">
+          <option>Francia</option>
+          <option>Brasil</option>
+          <option>España</option>
+          <option>Argentina</option>
+        </select>
+      </div>
+
+      <div class="compare-bars">
+        <div>
+          <label>Ataque</label>
+          <span><i style="width:87%"></i></span>
+          <strong id="attackCompare">87 / 84</strong>
+        </div>
+
+        <div>
+          <label>Defensa</label>
+          <span><i style="width:81%"></i></span>
+          <strong id="defenseCompare">81 / 86</strong>
+        </div>
+
+        <div>
+          <label>Posesión</label>
+          <span><i style="width:58%"></i></span>
+          <strong id="possessionCompare">58% / 52%</strong>
+        </div>
+
+        <div>
+          <label>Riesgo</label>
+          <span><i style="width:44%"></i></span>
+          <strong id="riskCompare">Medio / Bajo</strong>
+        </div>
+      </div>
+    </article>
+
+    <article class="panel insights-panel">
+      <div class="panel-header">
+        <div>
+          <span class="section-label">AI Insights Engine</span>
+          <h3>Hallazgos automáticos</h3>
+        </div>
+        <span class="panel-tag">IA contextual</span>
+      </div>
+
+      <div id="insightsList" class="insights-list">
+        <article>
+          <strong>Insight ofensivo</strong>
+          <p>Argentina lidera el índice ofensivo por consistencia, conversión y rendimiento en fases decisivas.</p>
+        </article>
+
+        <article>
+          <strong>Insight táctico</strong>
+          <p>España domina la posesión, pero su conversión es menor frente a equipos de transición rápida.</p>
+        </article>
+
+        <article>
+          <strong>Insight competitivo</strong>
+          <p>Francia presenta el mejor balance entre defensa y efectividad ofensiva.</p>
+        </article>
+      </div>
+    </article>
+
+  </section>
+
+</main>
+
+    <section class="ai-assistant">
+      <div class="assistant-info">
+        <span class="section-label">Agente conversacional</span>
+        <h3>AI Match Analyst</h3>
+        <p>Pregunta sobre rendimiento, equipos, tendencias, comparativos o predicciones del torneo.</p>
+
+        <div class="quick-questions">
+          <button data-question="¿Qué equipo tiene mejor rendimiento?">Mejor equipo</button>
+          <button data-question="Compara Argentina contra Francia">Comparar equipos</button>
+          <button data-question="Dame un insight del torneo">Insight</button>
+        </div>
+      </div>
+
+      <div class="chat-box">
+        <div id="chatMessages" class="chat-messages">
+          <div class="bot-message">
+            Hola, soy tu analista del Mundial. Puedes preguntarme qué equipo tiene mejor rendimiento, quién es más efectivo o comparar dos selecciones.
+          </div>
+        </div>
+
+        <div class="chat-input">
+          <input id="userQuestion" type="text" placeholder="Escribe tu pregunta analítica..." />
+          <button id="sendQuestion">Enviar</button>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <script src="assets/js/analytics.js"></script>
+  <script src="assets/js/ai-agent.js"></script>
+</body>
+</html>
